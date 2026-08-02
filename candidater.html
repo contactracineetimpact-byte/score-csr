@@ -103,14 +103,24 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
 <div class="barre"><i id="jauge"></i></div>
 <div class="haut">
   <span class="marque">Racine &amp; Impact</span>
-  <span class="compteur" id="compteur">01 / 08</span>
+  <span class="compteur" id="compteur">01 / 10</span>
 </div>
 
 <div class="scene">
   <div class="carte">
 
+    <!-- 0 -->
+    <div class="etape on" data-t="prenom-solo">
+      <div class="num">Avant de commencer</div>
+      <h2 class="q">C'est comment, ton prénom&nbsp;?</h2>
+      <p class="aide">Pour qu'on se parle simplement, dès la première question.</p>
+      <input type="text" id="prenom" autocomplete="given-name" placeholder="Ton prénom"/>
+      <div class="erreur">Indique ton prénom pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button></div>
+    </div>
+
     <!-- 1 -->
-    <div class="etape on" data-t="choix" data-c="duree">
+    <div class="etape" data-t="choix" data-c="duree">
       <div class="num">Question 01</div>
       <h2 class="q">Depuis combien de temps tu portes ton projet&nbsp;?</h2>
       <p class="aide">Ce qui compte, ce n'est pas l'ancienneté. C'est que tu l'aies gardé vivant.</p>
@@ -206,21 +216,32 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
     </div>
 
     <!-- 8 -->
+    <div class="etape" data-t="tel-dispo">
+      <div class="num">Question 08</div>
+      <h2 class="q">Ton numéro, et les moments où te joindre&nbsp;?</h2>
+      <p class="aide">Choisis jusqu'à 3 moments où tu es le plus disponible pour un appel.</p>
+      <span class="lbl">Ton numéro de téléphone</span>
+      <input type="tel" id="telephone" autocomplete="tel" placeholder="06 12 34 56 78" style="margin-bottom:24px"/>
+      <span class="lbl">Tes créneaux préférés</span>
+      <div class="choix choix-multi">
+        <button type="button" class="opt">Matin (8h – 12h)</button>
+        <button type="button" class="opt">Midi (12h – 14h)</button>
+        <button type="button" class="opt">Après-midi (14h – 18h)</button>
+        <button type="button" class="opt">Soir (18h – 20h)</button>
+      </div>
+      <div class="erreur">Indique ton numéro et au moins un créneau.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 9 -->
     <div class="etape" data-t="contact">
       <div class="num">Dernière étape</div>
       <h2 class="q">Où je te réponds&nbsp;?</h2>
       <p class="aide">Je lis ta candidature moi-même et je reviens vers toi sous 72 heures.</p>
-      <div class="duo">
-        <div>
-          <span class="lbl">Ton prénom</span>
-          <input type="text" id="prenom" autocomplete="given-name" placeholder="Prénom"/>
-        </div>
-        <div>
-          <span class="lbl">Ton email</span>
-          <input type="email" id="email" autocomplete="email" placeholder="prenom@email.com"/>
-        </div>
-      </div>
-      <div class="erreur" id="err-contact">Vérifie ton prénom et ton adresse email.</div>
+      <span class="lbl">Ton email</span>
+      <input type="email" id="email" autocomplete="email" placeholder="prenom@email.com"/>
+      <div class="erreur" id="err-contact">Vérifie ton adresse email.</div>
       <div class="pied"><button class="btn" id="envoyer">Envoyer ma candidature</button>
         <button class="retour" data-retour>← Retour</button></div>
       <p class="rgpd">Tes réponses me sont envoyées par email et servent uniquement à préparer
@@ -249,12 +270,12 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
 <script>
 /* ─── EmailJS ───
    ⚠ Crée un NOUVEAU template EmailJS pour ce formulaire et remplace TEMPLATE_CANDIDATURE.
-   Variables : {{prenom}} {{email}} {{duree}} {{projet}} {{blocage}} {{essaye}}
-               {{situation}} {{dispo}} {{engagement}}
+   Variables : {{prenom}} {{email}} {{telephone}} {{creneaux}} {{duree}} {{projet}}
+               {{blocage}} {{essaye}} {{situation}} {{dispo}} {{engagement}}
 */
 const EMAILJS_PUBLIC  = "3Dd1W0QbxF_U1_Gvd";
 const EMAILJS_SERVICE = "service_n2629zq";
-const EMAILJS_TEMPLATE = "TEMPLATE_CANDIDATURE";
+const EMAILJS_TEMPLATE = "template_pssylts";
 emailjs.init(EMAILJS_PUBLIC);
 
 const etapes = [...document.querySelectorAll(".etape")];
@@ -269,18 +290,30 @@ function afficher(n){
   etapes[i].classList.add("on");
   const p = (i / etapes.length) * 100;
   jauge.style.width = p + "%";
-  compteur.textContent = String(i + 1).padStart(2,"0") + " / 0" + etapes.length;
+  compteur.textContent = String(i + 1).padStart(2,"0") + " / " + String(etapes.length).padStart(2,"0");
   window.scrollTo({ top: 0, behavior: "smooth" });
   const f = etapes[i].querySelector("textarea, input");
   if (f && window.innerWidth > 760) setTimeout(() => f.focus(), 320);
 }
 
-/* choix */
-document.querySelectorAll(".choix").forEach(groupe => {
+/* choix — sélection unique */
+document.querySelectorAll(".choix:not(.choix-multi)").forEach(groupe => {
   groupe.querySelectorAll(".opt").forEach(b => {
     b.addEventListener("click", () => {
       groupe.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
       b.classList.add("sel");
+      groupe.parentElement.querySelector(".erreur").classList.remove("on");
+    });
+  });
+});
+
+/* choix — sélection multiple (créneaux), max 3 */
+document.querySelectorAll(".choix-multi").forEach(groupe => {
+  groupe.querySelectorAll(".opt").forEach(b => {
+    b.addEventListener("click", () => {
+      const deja = groupe.querySelectorAll(".opt.sel").length;
+      if (!b.classList.contains("sel") && deja >= 3) return;
+      b.classList.toggle("sel");
       groupe.parentElement.querySelector(".erreur").classList.remove("on");
     });
   });
@@ -304,6 +337,21 @@ function valide(et){
     reponses[et.dataset.c] = v;
     return true;
   }
+  if (type === "prenom-solo"){
+    const v = et.querySelector("#prenom").value.trim();
+    if (v.length < 1){ err.classList.add("on"); return false; }
+    reponses.prenom = v;
+    return true;
+  }
+  if (type === "tel-dispo"){
+    const tel = et.querySelector("#telephone").value.trim();
+    const telOk = /^[\d\s+().-]{8,}$/.test(tel);
+    const creneaux = [...et.querySelectorAll(".opt.sel")].map(b => b.textContent.trim());
+    if (!telOk || creneaux.length === 0){ err.classList.add("on"); return false; }
+    reponses.telephone = tel;
+    reponses.creneaux = creneaux.join(", ");
+    return true;
+  }
   return true;
 }
 
@@ -320,14 +368,12 @@ document.querySelectorAll("[data-retour]").forEach(b => {
 /* envoi */
 const envoyer = document.getElementById("envoyer");
 envoyer.addEventListener("click", async () => {
-  const prenom = document.getElementById("prenom").value.trim();
   const email  = document.getElementById("email").value.trim();
   const err = document.getElementById("err-contact");
-  const ok = prenom.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-  if (!ok){ err.textContent = "Vérifie ton prénom et ton adresse email."; err.classList.add("on"); return; }
+  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  if (!ok){ err.textContent = "Vérifie ton adresse email."; err.classList.add("on"); return; }
   err.classList.remove("on");
 
-  reponses.prenom = prenom;
   reponses.email = email;
 
   envoyer.disabled = true;
@@ -338,8 +384,9 @@ envoyer.addEventListener("click", async () => {
     etapes[i].classList.remove("on");
     jauge.style.width = "100%";
     compteur.textContent = "TERMINÉ";
+    const p = reponses.prenom || "";
     document.getElementById("fin-titre").textContent =
-      prenom.charAt(0).toUpperCase() + prenom.slice(1).toLowerCase() + ", c'est enregistré.";
+      p.charAt(0).toUpperCase() + p.slice(1).toLowerCase() + ", c'est enregistré.";
     document.getElementById("fin").classList.add("on");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }catch(e){
