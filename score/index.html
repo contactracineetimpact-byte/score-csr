@@ -772,67 +772,67 @@ function downloadPDF(){
   var pdata=PDF_DATA[currentProfile.l]||PDF_DATA["Système Avancé"];
   var sc=getScore();
 
-  var html='<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Guide — '+currentProfile.l+'</title><style>';
-  html+='body{font-family:Georgia,serif;background:#fff;color:#1a1a1a;max-width:680px;margin:0 auto;padding:48px 40px}';
-  html+='.header{border-bottom:2px solid #16276B;padding-bottom:24px;margin-bottom:32px}';
-  html+='.brand{font-size:12px;font-weight:bold;color:#16276B;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}';
-  html+='.title{font-size:28px;font-weight:bold;color:#1a1a1a;line-height:1.2;margin-bottom:8px}';
-  html+='.subtitle{font-size:15px;color:#444;margin-bottom:0}';
-  html+='.profil-badge{display:inline-block;background:#16276B;color:#fff;padding:8px 20px;border-radius:2px;font-size:13px;font-weight:bold;letter-spacing:1px;margin:24px 0}';
-  html+='.score-line{font-size:14px;color:#333;margin-bottom:32px}';
-  html+='.section{margin-bottom:32px}';
-  html+='.section-title{font-size:13px;font-weight:bold;color:#16276B;letter-spacing:2px;text-transform:uppercase;border-left:3px solid #c9a84c;padding-left:12px;margin-bottom:16px}';
-  html+='.science-box{background:#f5f0e8;border-left:3px solid #c9a84c;padding:16px 20px;font-size:14px;line-height:1.7;color:#444;margin-bottom:24px;border-radius:2px}';
-  html+='.exemple{background:#f9f9f9;border:1px solid #e0e0e0;padding:16px;margin-bottom:12px;border-radius:4px}';
-  html+='.exemple-name{font-weight:bold;color:#16276B;font-size:13px;margin-bottom:6px}';
-  html+='.exemple-text{font-size:14px;color:#333;line-height:1.6}';
-  html+='.action-box{background:#16276B;color:#fff;padding:20px 24px;border-radius:4px;margin-top:32px}';
-  html+='.action-title{font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px}';
-  html+='.action-text{font-size:15px;line-height:1.6}';
-  html+='.cta-section{margin-top:40px;border-top:1px solid #e0e0e0;padding-top:32px;text-align:center}';
-  html+='.cta-title{font-size:22px;font-weight:bold;color:#1a1a1a;margin-bottom:8px}';
-  html+='.cta-text{font-size:14px;color:#444;line-height:1.6;margin-bottom:20px}';
-  html+='.intro-box{font-size:16px;color:#1a1a1a;line-height:1.8;padding:24px 28px;background:#f8f6f0;border-left:4px solid #16276B;border-radius:2px;margin-bottom:32px;font-style:italic}';
-  html+='.cta-link{display:inline-block;background:#c9a84c;color:#0e1208;padding:14px 32px;text-decoration:none;font-weight:bold;font-size:14px;letter-spacing:1px;border-radius:2px}';
-  html+='.footer{margin-top:48px;padding-top:16px;border-top:1px solid #e0e0e0;font-size:11px;color:#c0bcb0;text-align:center}';
-  html+='</style></head><body>';
+  var html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Guide — `+currentProfile.l+`</title><style>`;
+  html+=`body{font-family:Georgia,serif;background:#fff;color:#1a1a1a;max-width:680px;margin:0 auto;padding:48px 40px}`;
+  html+=`.header{border-bottom:2px solid #16276B;padding-bottom:24px;margin-bottom:32px}`;
+  html+=`.brand{font-size:12px;font-weight:bold;color:#16276B;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}`;
+  html+=`.title{font-size:28px;font-weight:bold;color:#1a1a1a;line-height:1.2;margin-bottom:8px}`;
+  html+=`.subtitle{font-size:15px;color:#444;margin-bottom:0}`;
+  html+=`.profil-badge{display:inline-block;background:#16276B;color:#fff;padding:8px 20px;border-radius:2px;font-size:13px;font-weight:bold;letter-spacing:1px;margin:24px 0}`;
+  html+=`.score-line{font-size:14px;color:#333;margin-bottom:32px}`;
+  html+=`.section{margin-bottom:32px}`;
+  html+=`.section-title{font-size:13px;font-weight:bold;color:#16276B;letter-spacing:2px;text-transform:uppercase;border-left:3px solid #c9a84c;padding-left:12px;margin-bottom:16px}`;
+  html+=`.science-box{background:#f5f0e8;border-left:3px solid #c9a84c;padding:16px 20px;font-size:14px;line-height:1.7;color:#444;margin-bottom:24px;border-radius:2px}`;
+  html+=`.exemple{background:#f9f9f9;border:1px solid #e0e0e0;padding:16px;margin-bottom:12px;border-radius:4px}`;
+  html+=`.exemple-name{font-weight:bold;color:#16276B;font-size:13px;margin-bottom:6px}`;
+  html+=`.exemple-text{font-size:14px;color:#333;line-height:1.6}`;
+  html+=`.action-box{background:#16276B;color:#fff;padding:20px 24px;border-radius:4px;margin-top:32px}`;
+  html+=`.action-title{font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px}`;
+  html+=`.action-text{font-size:15px;line-height:1.6}`;
+  html+=`.cta-section{margin-top:40px;border-top:1px solid #e0e0e0;padding-top:32px;text-align:center}`;
+  html+=`.cta-title{font-size:22px;font-weight:bold;color:#1a1a1a;margin-bottom:8px}`;
+  html+=`.cta-text{font-size:14px;color:#444;line-height:1.6;margin-bottom:20px}`;
+  html+=`.intro-box{font-size:16px;color:#1a1a1a;line-height:1.8;padding:24px 28px;background:#f8f6f0;border-left:4px solid #16276B;border-radius:2px;margin-bottom:32px;font-style:italic}`;
+  html+=`.cta-link{display:inline-block;background:#c9a84c;color:#0e1208;padding:14px 32px;text-decoration:none;font-weight:bold;font-size:14px;letter-spacing:1px;border-radius:2px}`;
+  html+=`.footer{margin-top:48px;padding-top:16px;border-top:1px solid #e0e0e0;font-size:11px;color:#c0bcb0;text-align:center}`;
+  html+=`</style></head><body>`;
 
-  html+='<div class="header">';
-  html+='<div class="brand">Racine &amp; Impact — Architecte de réussite</div>';
-  html+='<div class="title">Guide de transformation — Archétype '+currentProfile.l+'</div>';
-  html+='<div class="subtitle">Guide personnalisé préparé pour '+prenom+'</div>';
-  html+='</div>';
+  html+=`<div class="header">`;
+  html+=`<div class="brand">Racine &amp; Impact — Architecte de réussite</div>`;
+  html+=`<div class="title">Guide de transformation — Archétype `+currentProfile.l+`</div>`;
+  html+=`<div class="subtitle">Guide personnalisé préparé pour `+prenom+`</div>`;
+  html+=`</div>`;
 
-  html+='<div class="profil-badge">'+currentProfile.e+' Profil : '+currentProfile.l+'</div>';
-  html+='<div class="score-line">Score CSR : '+sc+'/60 &nbsp;·&nbsp; '+new Date().toLocaleDateString('fr-FR')+'</div>';
+  html+=`<div class="profil-badge">`+currentProfile.e+` Profil : `+currentProfile.l+`</div>`;
+  html+=`<div class="score-line">Score CSR : `+sc+`/60 &nbsp;·&nbsp; `+new Date().toLocaleDateString(`fr-FR`)+`</div>`;
 
-  html+='<div class="intro-box">'+pdata.intro+'</div>';
+  html+=`<div class="intro-box">`+pdata.intro+`</div>`;
 
-  html+='<div class="section">';
-  html+='<div class="section-title">Ce que la science dit sur ton archétype</div>';
-  html+='<div class="science-box">'+pdata.science+'</div>';
-  html+='</div>';
+  html+=`<div class="section">`;
+  html+=`<div class="section-title">Ce que la science dit sur ton archétype</div>`;
+  html+=`<div class="science-box">`+pdata.science+`</div>`;
+  html+=`</div>`;
 
-  html+='<div class="section">';
-  html+='<div class="section-title">Ils ont vécu ce que tu vis</div>';
+  html+=`<div class="section">`;
+  html+=`<div class="section-title">Ils ont vécu ce que tu vis</div>`;
   pdata.exemples.forEach(function(ex){
-    html+='<div class="exemple"><div class="exemple-text">'+ex+'</div></div>';
+    html+=`<div class="exemple"><div class="exemple-text">`+ex+`</div></div>`;
   });
-  html+='</div>';
+  html+=`</div>`;
 
-  html+='<div class="action-box">';
-  html+='<div class="action-title">Ta première action — aujourd&#39;hui</div>';
-  html+='<div class="action-text">'+pdata.action+'</div>';
-  html+='</div>';
+  html+=`<div class="action-box">`;
+  html+=`<div class="action-title">Ta première action — aujourd&#39;hui</div>`;
+  html+=`<div class="action-text">`+pdata.action+`</div>`;
+  html+=`</div>`;
 
-  html+='<div class="cta-section">';
-  html+='<div class="cta-title">Prêt à aller plus loin, '+prenom+' ?</div>';
-  html+='<div class="cta-text">La Cartographie du Système de Réussite est une séance de 90 minutes pour rendre visible exactement ce qui te maintient là où tu es — et construire le plan des 30 prochains jours.</div>';
-  html+='<a class="cta-link" href="https://racineetimpact.com/candidater" target="_blank">DÉCOUVRIR POURQUOI JE N&#39;AVANCE PAS</a>';
-  html+='</div>';
+  html+=`<div class="cta-section">`;
+  html+=`<div class="cta-title">Prêt à aller plus loin, `+prenom+` ?</div>`;
+  html+=`<div class="cta-text">La Cartographie du Système de Réussite est une séance de 90 minutes pour rendre visible exactement ce qui te maintient là où tu es — et construire le plan des 30 prochains jours.</div>`;
+  html+=`<a class="cta-link" href="https://racineetimpact.com/candidater" target="_blank">DÉCOUVRIR POURQUOI JE N&#39;AVANCE PAS</a>`;
+  html+=`</div>`;
 
-  html+='<div class="footer">Racine &amp; Impact · Franck Doumakpe · Architecte de réussite · Document confidentiel.</div>';
-  html+='</body></html>';
+  html+=`<div class="footer">Racine &amp; Impact · Franck Doumakpe · Architecte de réussite · Document confidentiel.</div>`;
+  html+=`</body></html>`;
 
   var blob=new Blob([html],{type:'text/html'});
   var url=URL.createObjectURL(blob);
