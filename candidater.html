@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Candidature — Racine &amp; Impact</title>
+<meta name="robots" content="noindex"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{
+  --bleu:#16276B;--bleu-fonce:#0E1A4A;--bleu-nuit:#091132;--bleu-vif:#22378F;
+  --or:#C9A84C;--or-clair:#E0C87E;--creme:#F5F0E8;--gris:#8A867E;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'Barlow',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);color:var(--creme);font-size:17px;line-height:1.6;
+  background:radial-gradient(130% 90% at 50% 0%,var(--bleu-vif) 0%,var(--bleu) 32%,var(--bleu-nuit) 100%);
+  min-height:100svh;-webkit-font-smoothing:antialiased}
+
+/* barre de progression */
+.barre{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(245,240,232,.12);z-index:50}
+.barre i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--or),var(--or-clair));
+  transition:width .45s cubic-bezier(.2,.8,.3,1)}
+
+.haut{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;
+  align-items:center;z-index:40;pointer-events:none;
+  background:linear-gradient(180deg,var(--bleu-nuit) 55%,rgba(9,17,50,0) 100%)}
+.marque{font-family:var(--serif);font-size:17px;color:var(--or);letter-spacing:.02em}
+.compteur{font-size:12px;letter-spacing:.18em;color:rgba(245,240,232,.45)}
+
+.scene{min-height:100svh;display:flex;padding:104px 24px 48px}
+.carte{width:100%;max-width:620px;margin:auto}
+
+.etape{display:none}
+.etape.on{display:block;animation:entre .45s cubic-bezier(.2,.8,.3,1)}
+@keyframes entre{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.num{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
+.q{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.16;margin-bottom:12px}
+.aide{font-size:16px;font-weight:300;color:rgba(245,240,232,.62);margin-bottom:30px;max-width:46ch}
+
+/* choix cliquables */
+.choix{display:grid;gap:12px}
+.opt{position:relative;text-align:left;width:100%;cursor:pointer;
+  background:rgba(245,240,232,.05);border:1.5px solid rgba(245,240,232,.14);border-radius:7px;
+  padding:19px 56px 19px 22px;color:var(--creme);font-family:var(--sans);font-size:16.5px;font-weight:400;
+  transition:border-color .2s ease,background .2s ease,transform .16s ease}
+.opt:hover{background:rgba(245,240,232,.09);border-color:rgba(201,168,76,.5);transform:translateY(-2px)}
+.opt.sel{background:rgba(201,168,76,.14);border-color:var(--or)}
+.opt::after{content:'';position:absolute;right:20px;top:50%;transform:translateY(-50%);
+  width:19px;height:19px;border-radius:50%;border:1.5px solid rgba(245,240,232,.3);transition:all .2s ease}
+.opt.sel::after{border-color:var(--or);background:var(--or);
+  box-shadow:inset 0 0 0 4px var(--bleu-nuit)}
+
+/* champs libres */
+textarea,input{width:100%;font-family:var(--sans);font-size:17px;color:var(--creme);
+  background:rgba(245,240,232,.055);border:1.5px solid rgba(245,240,232,.14);border-radius:7px;
+  padding:17px 19px;outline:none;transition:border-color .2s ease,background .2s ease}
+textarea{min-height:130px;resize:vertical;line-height:1.6}
+textarea:focus,input:focus{border-color:var(--or);background:rgba(245,240,232,.085)}
+textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
+.duo{display:grid;gap:14px}
+@media(min-width:560px){.duo{grid-template-columns:1fr 1fr}}
+.lbl{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:8px;display:block}
+
+.erreur{color:#F0A9A0;font-size:14.5px;margin-top:14px;display:none}
+.erreur.on{display:block}
+
+.pied{display:flex;align-items:center;gap:16px;margin-top:32px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--or);color:var(--bleu-nuit);
+  font-weight:600;font-size:14.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:18px 36px;border:none;border-radius:3px;cursor:pointer;font-family:var(--sans);
+  transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
+.btn:hover:not(:disabled){background:var(--or-clair);transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,168,76,.3)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.retour{background:none;border:none;color:rgba(245,240,232,.5);font-family:var(--sans);font-size:14.5px;
+  cursor:pointer;padding:8px 0;transition:color .2s ease}
+.retour:hover{color:var(--or)}
+.astuce{font-size:13.5px;color:rgba(245,240,232,.38);margin-top:18px}
+
+/* confirmation */
+#fin{display:none;text-align:center}
+#fin.on{display:block;animation:entre .5s cubic-bezier(.2,.8,.3,1)}
+.coche{width:66px;height:66px;border-radius:50%;border:2px solid var(--or);margin:0 auto 28px;
+  display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--or)}
+.suite{list-style:none;margin:34px auto 0;max-width:390px;text-align:left}
+.suite li{position:relative;padding-left:38px;margin-bottom:18px;font-size:16.5px;font-weight:300;color:rgba(245,240,232,.85)}
+.suite li b{position:absolute;left:0;top:0;font-family:var(--serif);font-size:17px;color:var(--or);font-weight:600}
+.final-note{margin-top:36px;padding:22px 24px;border-left:2px solid var(--or);
+  background:rgba(245,240,232,.045);font-size:15.5px;font-weight:300;
+  color:rgba(245,240,232,.72);text-align:left;border-radius:0 5px 5px 0}
+.rgpd{font-size:13px;color:rgba(245,240,232,.36);margin-top:26px;line-height:1.55;max-width:48ch}
+
+:focus-visible{outline:2px solid var(--or);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="barre"><i id="jauge"></i></div>
+<div class="haut">
+  <span class="marque">Racine &amp; Impact</span>
+  <span class="compteur" id="compteur">01 / 08</span>
+</div>
+
+<div class="scene">
+  <div class="carte">
+
+    <!-- 1 -->
+    <div class="etape on" data-t="choix" data-c="duree">
+      <div class="num">Question 01</div>
+      <h2 class="q">Depuis combien de temps tu portes ton projet&nbsp;?</h2>
+      <p class="aide">Ce qui compte, ce n'est pas l'ancienneté. C'est que tu l'aies gardé vivant.</p>
+      <div class="choix">
+        <button type="button" class="opt">Moins de 3 mois</button>
+        <button type="button" class="opt">Entre 3 et 12 mois</button>
+        <button type="button" class="opt">Entre 1 et 3 ans</button>
+        <button type="button" class="opt">Plus de 3 ans</button>
+      </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="etape" data-t="texte" data-c="projet">
+      <div class="num">Question 02</div>
+      <h2 class="q">C'est quoi, ton projet&nbsp;?</h2>
+      <p class="aide">Une phrase suffit. Dis-le comme tu le dirais à un ami, pas comme dans un dossier.</p>
+      <textarea placeholder="Par exemple : je veux lancer mon activité de…"></textarea>
+      <div class="erreur">Décris ton projet, même brièvement.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="etape" data-t="texte" data-c="blocage">
+      <div class="num">Question 03</div>
+      <h2 class="q">Qu'est-ce qui bloque, selon toi&nbsp;?</h2>
+      <p class="aide">Ta réponse spontanée. Pas besoin qu'elle soit juste — c'est justement ce qu'on ira vérifier ensemble.</p>
+      <textarea placeholder="Ce qui me bloque, c'est…"></textarea>
+      <div class="erreur">Dis-le avec tes mots, même maladroitement.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="etape" data-t="texte" data-c="essaye">
+      <div class="num">Question 04</div>
+      <h2 class="q">Qu'est-ce que tu as déjà essayé&nbsp;?</h2>
+      <p class="aide">Lectures, formations, applications, coachs, méthodes… et ce que ça a donné.</p>
+      <textarea placeholder="J'ai essayé…"></textarea>
+      <div class="erreur">Réponds en une ligne au minimum.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="etape" data-t="choix" data-c="situation">
+      <div class="num">Question 05</div>
+      <h2 class="q">Ta situation professionnelle aujourd'hui</h2>
+      <p class="aide">Ça change beaucoup de choses sur la manière dont on construira ton système.</p>
+      <div class="choix">
+        <button type="button" class="opt">Salarié·e</button>
+        <button type="button" class="opt">Indépendant·e ou entrepreneur·e</button>
+        <button type="button" class="opt">En reconversion</button>
+        <button type="button" class="opt">Sans activité professionnelle actuellement</button>
+        <button type="button" class="opt">Autre</button>
+      </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="etape" data-t="choix" data-c="dispo">
+      <div class="num">Question 06</div>
+      <h2 class="q">Combien de temps tu peux vraiment y consacrer par semaine&nbsp;?</h2>
+      <p class="aide">Pas dans l'idéal. Cette semaine, avec ta vie telle qu'elle est aujourd'hui.</p>
+      <div class="choix">
+        <button type="button" class="opt">Moins de 2 heures</button>
+        <button type="button" class="opt">Entre 2 et 4 heures</button>
+        <button type="button" class="opt">Entre 4 et 7 heures</button>
+        <button type="button" class="opt">Plus de 7 heures</button>
+      </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="etape" data-t="choix" data-c="engagement">
+      <div class="num">Question 07</div>
+      <h2 class="q">Si on décide ensemble que c'est le bon moment, tu es prêt à t'engager sur 60 jours&nbsp;?</h2>
+      <p class="aide">Réponds honnêtement. Aucune réponse ne te disqualifie — elle change juste ce dont on parlera.</p>
+      <div class="choix">
+        <button type="button" class="opt">Oui, c'est exactement ce que je cherche</button>
+        <button type="button" class="opt">Oui, si je comprends comment ça se passe concrètement</button>
+        <button type="button" class="opt">Je ne sais pas encore, je veux d'abord en parler</button>
+      </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="etape" data-t="contact">
+      <div class="num">Dernière étape</div>
+      <h2 class="q">Où je te réponds&nbsp;?</h2>
+      <p class="aide">Je lis ta candidature moi-même et je reviens vers toi sous 72 heures.</p>
+      <div class="duo">
+        <div>
+          <span class="lbl">Ton prénom</span>
+          <input type="text" id="prenom" autocomplete="given-name" placeholder="Prénom"/>
+        </div>
+        <div>
+          <span class="lbl">Ton email</span>
+          <input type="email" id="email" autocomplete="email" placeholder="prenom@email.com"/>
+        </div>
+      </div>
+      <div class="erreur" id="err-contact">Vérifie ton prénom et ton adresse email.</div>
+      <div class="pied"><button class="btn" id="envoyer">Envoyer ma candidature</button>
+        <button class="retour" data-retour>← Retour</button></div>
+      <p class="rgpd">Tes réponses me sont envoyées par email et servent uniquement à préparer
+        notre échange. Elles ne sont ni revendues ni utilisées à d'autres fins. Tu peux
+        demander leur suppression à tout moment.</p>
+    </div>
+
+    <!-- CONFIRMATION -->
+    <div id="fin">
+      <div class="coche">✓</div>
+      <h2 class="q" id="fin-titre">C'est enregistré.</h2>
+      <p class="aide" style="margin:0 auto 6px">Tu viens de faire quelque chose que la plupart
+        des gens repoussent encore.</p>
+      <ul class="suite">
+        <li><b>01</b> Je lis ta candidature en entier, moi-même.</li>
+        <li><b>02</b> Je te réponds sous 72 heures avec deux ou trois créneaux.</li>
+        <li><b>03</b> On échange 30 minutes. Tu repars avec un élément clair, que la suite se fasse ou non.</li>
+      </ul>
+      <p class="final-note">Si je ne suis pas la bonne personne pour ce que tu vis, je te le
+        dirai — et je t'orienterai ailleurs. C'est aussi à ça que sert cet échange.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ─── EmailJS ───
+   ⚠ Crée un NOUVEAU template EmailJS pour ce formulaire et remplace TEMPLATE_CANDIDATURE.
+   Variables : {{prenom}} {{email}} {{duree}} {{projet}} {{blocage}} {{essaye}}
+               {{situation}} {{dispo}} {{engagement}}
+*/
+const EMAILJS_PUBLIC  = "3Dd1W0QbxF_U1_Gvd";
+const EMAILJS_SERVICE = "service_n2629zq";
+const EMAILJS_TEMPLATE = "TEMPLATE_CANDIDATURE";
+emailjs.init(EMAILJS_PUBLIC);
+
+const etapes = [...document.querySelectorAll(".etape")];
+const jauge = document.getElementById("jauge");
+const compteur = document.getElementById("compteur");
+const reponses = {};
+let i = 0;
+
+function afficher(n){
+  etapes[i].classList.remove("on");
+  i = n;
+  etapes[i].classList.add("on");
+  const p = (i / etapes.length) * 100;
+  jauge.style.width = p + "%";
+  compteur.textContent = String(i + 1).padStart(2,"0") + " / 0" + etapes.length;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  const f = etapes[i].querySelector("textarea, input");
+  if (f && window.innerWidth > 760) setTimeout(() => f.focus(), 320);
+}
+
+/* choix */
+document.querySelectorAll(".choix").forEach(groupe => {
+  groupe.querySelectorAll(".opt").forEach(b => {
+    b.addEventListener("click", () => {
+      groupe.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
+      b.classList.add("sel");
+      groupe.parentElement.querySelector(".erreur").classList.remove("on");
+    });
+  });
+});
+document.querySelectorAll("textarea").forEach(t => {
+  t.addEventListener("input", () => t.parentElement.querySelector(".erreur").classList.remove("on"));
+});
+
+function valide(et){
+  const err = et.querySelector(".erreur");
+  const type = et.dataset.t;
+  if (type === "choix"){
+    const s = et.querySelector(".opt.sel");
+    if (!s){ err.classList.add("on"); return false; }
+    reponses[et.dataset.c] = s.textContent.trim();
+    return true;
+  }
+  if (type === "texte"){
+    const v = et.querySelector("textarea").value.trim();
+    if (v.length < 3){ err.classList.add("on"); return false; }
+    reponses[et.dataset.c] = v;
+    return true;
+  }
+  return true;
+}
+
+document.querySelectorAll("[data-suivant]").forEach(b => {
+  b.addEventListener("click", () => {
+    const et = b.closest(".etape");
+    if (valide(et)) afficher(i + 1);
+  });
+});
+document.querySelectorAll("[data-retour]").forEach(b => {
+  b.addEventListener("click", () => afficher(i - 1));
+});
+
+/* envoi */
+const envoyer = document.getElementById("envoyer");
+envoyer.addEventListener("click", async () => {
+  const prenom = document.getElementById("prenom").value.trim();
+  const email  = document.getElementById("email").value.trim();
+  const err = document.getElementById("err-contact");
+  const ok = prenom.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  if (!ok){ err.textContent = "Vérifie ton prénom et ton adresse email."; err.classList.add("on"); return; }
+  err.classList.remove("on");
+
+  reponses.prenom = prenom;
+  reponses.email = email;
+
+  envoyer.disabled = true;
+  envoyer.textContent = "Envoi en cours…";
+
+  try{
+    await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, reponses);
+    etapes[i].classList.remove("on");
+    jauge.style.width = "100%";
+    compteur.textContent = "TERMINÉ";
+    document.getElementById("fin-titre").textContent =
+      prenom.charAt(0).toUpperCase() + prenom.slice(1).toLowerCase() + ", c'est enregistré.";
+    document.getElementById("fin").classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }catch(e){
+    console.error(e);
+    envoyer.disabled = false;
+    envoyer.textContent = "Envoyer ma candidature";
+    err.textContent = "L'envoi n'a pas abouti. Réessaie, ou écris-moi à contact.racineetimpact@gmail.com.";
+    err.classList.add("on");
+  }
+});
+
+jauge.style.width = "0%";
+</script>
+</body>
+</html>
