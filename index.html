@@ -529,6 +529,7 @@ footer b{display:block;font-family:var(--serif);font-size:20px;color:var(--or);f
         <p class="desc">Le parcours complet. On ne s'arrête pas au diagnostic : on construit le
           système, on l'installe, on le règle, et on vérifie qu'il tient sans moi.
           Garantie incluse.</p>
+        <p style="font-size:13px;opacity:.65;margin-top:-8px;margin-bottom:16px">Paiement en 4 fois possible, un règlement avant chaque séance de suivi.</p>
         <a href="candidater.html" class="lien">Candidater →</a>
       </div>
     </div>
@@ -642,7 +643,23 @@ footer b{display:block;font-family:var(--serif);font-size:20px;color:var(--or);f
   <b>Racine &amp; Impact</b>
   Franck Doumakpe · Architecte de réussite
   <p style="margin-top:10px;font-size:13px;opacity:.65;font-weight:300">Accompagnement en visioconférence partout en France · séances en présentiel possibles en Charente (Angoulême et alentours)</p>
+  <p style="margin-top:14px;font-size:12px;opacity:.55;font-weight:300"><a href="cgv.html" style="color:inherit;text-decoration:underline">Conditions générales de vente</a> · <a href="mentions-legales.html" style="color:inherit;text-decoration:underline">Mentions légales</a> · <a href="confidentialite.html" style="color:inherit;text-decoration:underline">Confidentialité</a></p>
+  <p style="margin-top:8px;font-size:11px;opacity:.5;font-weight:300;max-width:520px;margin-left:auto;margin-right:auto">Conformément au Code de la consommation, après nous avoir sollicités et à défaut de réponse satisfaisante, vous avez la possibilité de recourir gratuitement au médiateur de la consommation CM2C — <a href="https://www.cm2c.net/declarer-un-litige.php" style="color:inherit">cm2c.net/declarer-un-litige.php</a></p>
 </footer>
+
+<button id="scrollTop" aria-label="Remonter en haut de page" style="position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;background:var(--or);color:var(--bleu-nuit);border:none;font-size:20px;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .25s ease,transform .25s ease;z-index:50;box-shadow:0 4px 14px rgba(0,0,0,.35)">↑</button>
+<script>
+(function(){
+  var btn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', function(){
+    if (window.scrollY > 600){ btn.style.opacity = '1'; btn.style.visibility = 'visible'; }
+    else { btn.style.opacity = '0'; btn.style.visibility = 'hidden'; }
+  });
+  btn.addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
 
 <script>
 /* miroir interactif */
