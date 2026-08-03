@@ -3,702 +3,402 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Racine &amp; Impact — Tu sais déjà quoi faire | Angoulême &amp; visio</title>
-<meta name="description" content="Ce n'est pas la motivation. C'est ton système. Accompagnement 60 jours, en visio partout en France ou en présentiel à Angoulême, pour ceux qui savent quoi faire et n'y arrivent pas."/>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Racine & Impact",
-  "founder": { "@type": "Person", "name": "Franck Doumakpe", "jobTitle": "Architecte de réussite" },
-  "areaServed": ["Charente", "France"],
-  "telephone": "+33756945868",
-  "email": "contact.racineetimpact@gmail.com",
-  "url": "https://score-csr.vercel.app",
-  "description": "Accompagnement personnalisé sur 60 jours pour passer à l'action, méthode Cartographie du Système de Réussite (CSR).",
-  "priceRange": "€€"
-}
-</script>
+<title>Candidature — Racine &amp; Impact</title>
+<meta name="robots" content="noindex"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --bleu:#16276B;--bleu-fonce:#0E1A4A;--bleu-nuit:#091132;--bleu-vif:#22378F;
-  --noir:#0B0B0D;--or:#C9A84C;--or-clair:#E0C87E;--creme:#F5F0E8;
-  --encre:#141518;--gris:#6E6A63;
-  --serif:'Cormorant Garamond',Georgia,serif;--sans:'Barlow',system-ui,-apple-system,sans-serif;
+  --or:#C9A84C;--or-clair:#E0C87E;--creme:#F5F0E8;--gris:#8A867E;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'Barlow',system-ui,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bleu-nuit);color:var(--creme);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-.wrap{max-width:1040px;margin:0 auto;padding:0 26px;position:relative;z-index:2}
-.col{max-width:640px}
-section{position:relative;padding:96px 0}
+body{font-family:var(--sans);color:var(--creme);font-size:17px;line-height:1.6;
+  background:radial-gradient(130% 90% at 50% 0%,var(--bleu-vif) 0%,var(--bleu) 32%,var(--bleu-nuit) 100%);
+  min-height:100svh;-webkit-font-smoothing:antialiased}
 
-.eyebrow{font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--or);margin-bottom:18px}
-h1{font-family:var(--serif);font-weight:700;font-size:clamp(42px,7.4vw,76px);line-height:1.02;letter-spacing:-.015em}
-h1 em{font-style:italic;font-weight:400;color:var(--or);display:block}
-h2{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.8vw,46px);line-height:1.12;margin-bottom:20px}
-h3{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.25}
-p{font-weight:300}
-.lead{font-size:18.5px;line-height:1.68;color:rgba(245,240,232,.8)}
-.filet{width:52px;height:3px;background:var(--or);border-radius:2px}
+/* barre de progression */
+.barre{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(245,240,232,.12);z-index:50}
+.barre i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--or),var(--or-clair));
+  transition:width .45s cubic-bezier(.2,.8,.3,1)}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;background:var(--or);color:var(--bleu-nuit);
-  font-weight:600;font-size:14.5px;letter-spacing:.08em;text-transform:uppercase;
-  padding:19px 34px;border:none;border-radius:3px;text-decoration:none;cursor:pointer;
-  max-width:100%;text-align:center;line-height:1.3;
-  transition:transform .2s cubic-bezier(.2,.8,.3,1),box-shadow .2s ease,background .2s ease}
-.btn .fl{flex-shrink:0}
-@media(max-width:520px){
-  .btn{font-size:13px;padding:17px 24px;letter-spacing:.05em}
-}
-.btn:hover{background:var(--or-clair);transform:translateY(-3px);box-shadow:0 14px 34px rgba(201,168,76,.3)}
-.btn .fl{transition:transform .2s ease}
-.btn:hover .fl{transform:translateX(4px)}
-.btn-l{margin-top:36px}
-.sous-btn{display:block;margin-top:13px;font-size:13.5px;color:rgba(245,240,232,.5)}
+.haut{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;justify-content:space-between;
+  align-items:center;z-index:40;pointer-events:none;
+  background:linear-gradient(180deg,var(--bleu-nuit) 55%,rgba(9,17,50,0) 100%)}
+.marque{font-family:var(--serif);font-size:17px;color:var(--or);letter-spacing:.02em}
+.compteur{font-size:12px;letter-spacing:.18em;color:rgba(245,240,232,.45)}
 
-/* HERO */
-#hero{min-height:100svh;display:flex;align-items:center;padding:96px 0 70px;
-  background:radial-gradient(120% 85% at 78% 22%,var(--bleu-vif) 0%,var(--bleu) 38%,var(--bleu-nuit) 100%)}
-.hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
-@media(min-width:900px){.hero-grid{grid-template-columns:1.15fr .85fr}}
-.hero-sub{margin-top:26px;font-size:20px;color:rgba(245,240,232,.82);max-width:40ch}
-.hero-sub b{color:var(--or-clair);font-weight:500}
-.portrait-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
-.portrait-wrap::before{content:'';position:absolute;top:2%;left:50%;transform:translateX(-50%);
-  width:96%;aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(circle,rgba(201,168,76,.22) 0%,rgba(201,168,76,.07) 42%,transparent 68%)}
-.portrait{position:relative;width:100%;max-width:325px;display:block;filter:drop-shadow(0 24px 52px rgba(0,0,0,.5))}
-.signature{margin-top:2px;text-align:center;position:relative}
-.signature b{display:block;font-family:var(--serif);font-size:21px;font-weight:600;color:var(--or)}
-.signature span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,232,.5)}
+.scene{min-height:100svh;display:flex;padding:104px 24px 48px}
+.carte{width:100%;max-width:620px;margin:auto}
 
-/* MIROIR INTERACTIF */
-#miroir{background:var(--noir)}
-.coches{margin-top:38px;display:grid;gap:11px;max-width:660px}
-.ch{position:relative;text-align:left;width:100%;cursor:pointer;font-family:var(--sans);
-  background:rgba(245,240,232,.045);border:1.5px solid rgba(245,240,232,.11);border-radius:6px;
-  padding:18px 56px 18px 22px;color:rgba(245,240,232,.72);font-size:16.5px;font-weight:300;line-height:1.45;
-  transition:all .2s ease}
-.ch:hover{background:rgba(245,240,232,.08);border-color:rgba(201,168,76,.4)}
-.ch.on{background:rgba(201,168,76,.13);border-color:var(--or);color:var(--creme)}
-.ch::after{content:'';position:absolute;right:20px;top:50%;transform:translateY(-50%);
-  width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(245,240,232,.28);transition:all .2s ease}
-.ch.on::after{border-color:var(--or);background:var(--or)}
-.ch.on::before{content:'✓';position:absolute;right:24px;top:50%;transform:translateY(-50%);
-  color:var(--bleu-nuit);font-size:14px;font-weight:700;z-index:3}
-.verdict{margin-top:28px;padding:26px 28px;border-radius:7px;
-  background:linear-gradient(140deg,rgba(22,39,107,.7),rgba(22,39,107,.25));
-  border:1px solid rgba(201,168,76,.35);max-width:660px;
-  opacity:0;max-height:0;overflow:hidden;transition:opacity .5s ease,max-height .5s ease,padding .4s ease}
-.verdict.on{opacity:1;max-height:660px}
-.verdict .score{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--or);margin-bottom:8px;line-height:1.25}
-.verdict p{font-size:16px;color:rgba(245,240,232,.85);line-height:1.55}
-#negations{list-style:none;margin:18px 0 0}
-#negations li{position:relative;padding-left:24px;margin-bottom:10px;font-size:16px;font-weight:300;
-  color:rgba(245,240,232,.72);line-height:1.5;opacity:0;animation:surgit .5s ease forwards}
-#negations li::before{content:'';position:absolute;left:0;top:11px;width:12px;height:1.5px;background:rgba(245,240,232,.3)}
-#negations li.cle{color:var(--or-clair);font-weight:500}
-#negations li.cle::before{background:var(--or);height:2px}
-@keyframes surgit{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.verdict .btn{margin-top:20px;font-size:13px;padding:16px 26px;letter-spacing:.06em}
-@media(max-width:520px){
-  .verdict{padding:22px 20px}
-  .verdict .score{font-size:19px}
-  .verdict p{font-size:15.5px}
-  .verdict .btn{width:100%;justify-content:center;padding:16px 18px;font-size:12.5px;text-align:center}
-}
+.etape{display:none}
+.etape.on{display:block;animation:entre .45s cubic-bezier(.2,.8,.3,1)}
+@keyframes entre{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
-/* THÈSE + COÛT */
-#these{background:linear-gradient(180deg,var(--noir) 0%,var(--bleu-nuit) 100%)}
-.phrases p{font-family:var(--serif);font-size:clamp(25px,4.2vw,38px);line-height:1.35;
-  color:rgba(245,240,232,.38);transition:color .55s ease;margin-bottom:6px}
-.phrases p.on{color:var(--creme)}
-.phrases p:last-child,.phrases p:last-child.on{color:var(--or)}
-.compteur-t{margin-top:40px;padding:26px 28px;border-left:2px solid var(--or);
-  background:rgba(245,240,232,.04);border-radius:0 5px 5px 0;max-width:640px}
-.compteur-t b{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--or-clair);display:block;margin-bottom:8px}
+.num{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
+.q{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.16;margin-bottom:12px}
+.aide{font-size:16px;font-weight:300;color:rgba(245,240,232,.62);margin-bottom:30px;max-width:46ch}
 
-/* HISTOIRE + PREUVES */
-#histoire{background:var(--creme);color:var(--encre)}
-#histoire h2{color:var(--bleu)}
-#histoire .eyebrow{color:var(--bleu-vif)}
-#histoire p{color:#3B3833;font-size:18px;margin-bottom:17px;font-weight:400}
-#histoire p.grand{font-family:var(--serif);font-size:clamp(23px,3.2vw,29px);line-height:1.4;color:var(--bleu);font-weight:600;margin:30px 0}
-.preuves{display:grid;gap:13px;margin-top:34px}
-@media(min-width:700px){.preuves{grid-template-columns:1fr 1fr}}
-.pr{background:#fff;border-left:3px solid var(--or);border-radius:0 6px 6px 0;padding:20px 22px;
-  box-shadow:0 6px 20px rgba(14,26,74,.07)}
-.pr b{display:block;font-family:var(--serif);font-size:20px;color:var(--bleu);font-weight:600;margin-bottom:4px}
-.pr span{font-size:15.5px;color:#4A4740;font-weight:400}
-.photo-preuve{margin:34px 0 0;position:relative}
-.photo-preuve img{width:100%;max-width:340px;display:block;border-radius:8px;
-  box-shadow:0 18px 44px rgba(14,26,74,.22)}
-.photo-preuve figcaption{margin-top:12px;font-size:14.5px;color:var(--gris);max-width:340px;font-style:italic}
-@media(min-width:760px){
-  .histoire-bas{display:grid;grid-template-columns:340px 1fr;gap:34px;align-items:start;margin-top:34px}
-  .photo-preuve{margin:0}
-  .histoire-bas .preuves{margin-top:0}
-}
+/* choix cliquables */
+.choix{display:grid;gap:12px}
+.opt{position:relative;text-align:left;width:100%;cursor:pointer;
+  background:rgba(245,240,232,.05);border:1.5px solid rgba(245,240,232,.14);border-radius:7px;
+  padding:19px 56px 19px 22px;color:var(--creme);font-family:var(--sans);font-size:16.5px;font-weight:400;
+  transition:border-color .2s ease,background .2s ease,transform .16s ease}
+.opt:hover{background:rgba(245,240,232,.09);border-color:rgba(201,168,76,.5);transform:translateY(-2px)}
+.opt.sel{background:rgba(201,168,76,.14);border-color:var(--or)}
+.opt::after{content:'';position:absolute;right:20px;top:50%;transform:translateY(-50%);
+  width:19px;height:19px;border-radius:50%;border:1.5px solid rgba(245,240,232,.3);transition:all .2s ease}
+.opt.sel::after{border-color:var(--or);background:var(--or);
+  box-shadow:inset 0 0 0 4px var(--bleu-nuit)}
 
-/* MÉTHODE */
-#methode{background:linear-gradient(180deg,var(--bleu-nuit) 0%,var(--bleu-fonce) 55%,var(--bleu) 100%)}
-.etapes{margin-top:44px;display:grid;gap:14px}
-@media(min-width:760px){.etapes{grid-template-columns:1fr 1fr}.et:nth-child(5){grid-column:1/-1}}
-.et{background:rgba(245,240,232,.055);border:1px solid rgba(245,240,232,.1);border-radius:6px;
-  padding:26px 24px;transition:all .25s ease}
-.et:hover{background:rgba(245,240,232,.085);border-color:rgba(201,168,76,.45);transform:translateY(-3px)}
-.et .n{font-family:var(--serif);font-size:42px;font-weight:600;color:rgba(201,168,76,.4);line-height:1;display:block;margin-bottom:9px}
-.et h3{margin-bottom:7px}
-.et p{font-size:15.5px;color:rgba(245,240,232,.68);line-height:1.56}
+/* champs libres */
+textarea,input{width:100%;font-family:var(--sans);font-size:17px;color:var(--creme);
+  background:rgba(245,240,232,.055);border:1.5px solid rgba(245,240,232,.14);border-radius:7px;
+  padding:17px 19px;outline:none;transition:border-color .2s ease,background .2s ease}
+textarea{min-height:130px;resize:vertical;line-height:1.6}
+textarea:focus,input:focus{border-color:var(--or);background:rgba(245,240,232,.085)}
+textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
+.duo{display:grid;gap:14px}
+@media(min-width:560px){.duo{grid-template-columns:1fr 1fr}}
+.lbl{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:8px;display:block}
 
-/* DÉROULÉ */
-#deroule{background:var(--bleu)}
-.timeline{margin-top:42px;position:relative;padding-left:34px}
-.timeline::before{content:'';position:absolute;left:6px;top:10px;bottom:10px;width:1px;
-  background:linear-gradient(180deg,transparent,rgba(201,168,76,.5) 10%,rgba(201,168,76,.5) 90%,transparent)}
-.tl{position:relative;padding-bottom:26px}
-.tl:last-child{padding-bottom:0}
-.tl::before{content:'';position:absolute;left:-32px;top:8px;width:9px;height:9px;border-radius:50%;
-  background:var(--or);box-shadow:0 0 0 5px var(--bleu)}
-.tl .j{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:3px}
-.tl h3{margin-bottom:4px;font-size:21px}
-.tl p{font-size:15.5px;color:rgba(245,240,232,.72)}
-.inclus{margin-top:40px;display:grid;gap:13px}
-@media(min-width:700px){.inclus{grid-template-columns:1fr 1fr}}
-.inc{background:rgba(245,240,232,.06);border-left:2px solid var(--or);padding:19px 21px;border-radius:0 5px 5px 0}
-.inc b{display:block;font-size:16.5px;font-weight:500;margin-bottom:4px}
-.inc span{font-size:15px;font-weight:300;color:rgba(245,240,232,.7)}
+.erreur{color:#F0A9A0;font-size:14.5px;margin-top:14px;display:none}
+.erreur.on{display:block}
 
-/* NIVEAUX */
-#niveaux{background:var(--creme);color:var(--encre)}
-#niveaux h2{color:var(--bleu)}
-#niveaux .eyebrow{color:var(--bleu-vif)}
-#niveaux .lead{color:#4A4740}
-.niv{display:grid;gap:22px;margin-top:50px}
-@media(min-width:860px){.niv{grid-template-columns:repeat(3,1fr);align-items:stretch}}
-.n1{background:#fff;border-radius:8px;padding:28px 25px;box-shadow:0 12px 32px rgba(14,26,74,.09);
-  display:flex;flex-direction:column}
-.n1.phare{box-shadow:0 24px 56px rgba(14,26,74,.2);border:2px solid var(--or);position:relative}
-.badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--or);color:var(--bleu-nuit);
-  font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:6px 15px;border-radius:100px;white-space:nowrap}
-.n1 .nom{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--bleu);line-height:1.2}
-.n1 .duree{font-size:13px;letter-spacing:.05em;color:var(--gris);margin-top:5px}
-.n1 .tarif{font-family:var(--serif);font-size:35px;font-weight:700;color:var(--bleu);margin:16px 0 4px;line-height:1}
-.n1 .tarif small{font-size:14px;font-family:var(--sans);font-weight:400;color:var(--gris)}
-.n1 .desc{font-size:15.5px;color:#4A4740;font-weight:400;margin-top:11px;flex:1}
-.n1 .lien{margin-top:18px;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
-  color:var(--bleu);text-decoration:none;border-bottom:1.5px solid var(--or);padding-bottom:3px;align-self:flex-start}
-.n1 .lien:hover{color:var(--bleu-vif)}
+.pied{display:flex;align-items:center;gap:16px;margin-top:32px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--or);color:var(--bleu-nuit);
+  font-weight:600;font-size:14.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:18px 36px;border:none;border-radius:3px;cursor:pointer;font-family:var(--sans);
+  transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
+.btn:hover:not(:disabled){background:var(--or-clair);transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,168,76,.3)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.retour{background:none;border:none;color:rgba(245,240,232,.5);font-family:var(--sans);font-size:14.5px;
+  cursor:pointer;padding:8px 0;transition:color .2s ease}
+.retour:hover{color:var(--or)}
+.astuce{font-size:13.5px;color:rgba(245,240,232,.38);margin-top:18px}
 
-/* GARANTIE */
-#garantie{background:var(--noir)}
-.gbox{margin-top:32px;border:1px solid rgba(201,168,76,.35);border-radius:8px;overflow:hidden;max-width:660px}
-.gbox .h{background:linear-gradient(120deg,var(--bleu),var(--bleu-vif));padding:24px 28px}
-.gbox .h b{font-family:var(--serif);font-size:26px;font-weight:600}
-.gbox .c{padding:26px 28px;font-size:17px;font-weight:300;color:rgba(245,240,232,.85)}
-.gbox .c b{color:var(--or-clair);font-weight:500}
-.gbox .c .cond{margin-top:16px;font-size:15px;color:rgba(245,240,232,.6)}
+/* confirmation */
+#fin{display:none;text-align:center}
+#fin.on{display:block;animation:entre .5s cubic-bezier(.2,.8,.3,1)}
+.coche{width:66px;height:66px;border-radius:50%;border:2px solid var(--or);margin:0 auto 28px;
+  display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--or)}
+.suite{list-style:none;margin:34px auto 0;max-width:390px;text-align:left}
+.suite li{position:relative;padding-left:38px;margin-bottom:18px;font-size:16.5px;font-weight:300;color:rgba(245,240,232,.85)}
+.suite li b{position:absolute;left:0;top:0;font-family:var(--serif);font-size:17px;color:var(--or);font-weight:600}
+.final-note{margin-top:36px;padding:22px 24px;border-left:2px solid var(--or);
+  background:rgba(245,240,232,.045);font-size:15.5px;font-weight:300;
+  color:rgba(245,240,232,.72);text-align:left;border-radius:0 5px 5px 0}
+.rgpd{font-size:13px;color:rgba(245,240,232,.36);margin-top:26px;line-height:1.55;max-width:48ch}
 
-/* TÉMOIGNAGES */
-#temoins{background:linear-gradient(180deg,var(--noir) 0%,var(--bleu-nuit) 100%)}
-.grille-t{display:grid;gap:16px;margin-top:40px}
-@media(min-width:820px){.grille-t{grid-template-columns:1fr 1fr}}
-.tm{background:linear-gradient(140deg,rgba(22,39,107,.5),rgba(22,39,107,.16));
-  border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:26px 24px}
-.tm .res{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:12px;font-weight:600}
-.tm q{display:block;font-family:var(--serif);font-size:19px;font-style:italic;line-height:1.5;quotes:none}
-.tm q::before,.tm q::after{content:''}
-.tm cite{display:block;margin-top:14px;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,232,.5)}
-.note{margin-top:28px;padding:20px 24px;border-left:2px solid var(--or);background:rgba(245,240,232,.04);
-  font-size:15.5px;font-weight:300;color:rgba(245,240,232,.72);border-radius:0 4px 4px 0;max-width:660px}
-.note b{color:var(--creme);font-weight:500}
-
-/* POUR QUI */
-#pourqui{background:var(--bleu-fonce)}
-.duo2{display:grid;gap:18px;margin-top:38px}
-@media(min-width:800px){.duo2{grid-template-columns:1fr 1fr;gap:22px}}
-.bloc{border-radius:8px;padding:28px 26px}
-.bloc.oui{background:rgba(201,168,76,.09);border:1px solid rgba(201,168,76,.32)}
-.bloc.non{background:rgba(245,240,232,.04);border:1px solid rgba(245,240,232,.1)}
-.bloc h3{margin-bottom:16px;font-size:22px}
-.bloc.oui h3{color:var(--or)}
-.bloc.non h3{color:rgba(245,240,232,.62)}
-.bloc ul{list-style:none}
-.bloc li{position:relative;padding-left:25px;margin-bottom:13px;font-size:16px;font-weight:300;line-height:1.5}
-.bloc li:last-child{margin-bottom:0}
-.bloc.oui li::before{content:'';position:absolute;left:0;top:10px;width:12px;height:2px;background:var(--or)}
-.bloc.non li{color:rgba(245,240,232,.6)}
-.bloc.non li::before{content:'';position:absolute;left:0;top:10px;width:12px;height:1.5px;background:rgba(245,240,232,.28)}
-
-/* OBJECTIONS */
-#objections{background:var(--bleu-nuit)}
-.qr{margin-top:34px;border-top:1px solid rgba(245,240,232,.1)}
-.qr details{border-bottom:1px solid rgba(245,240,232,.1)}
-.qr summary{cursor:pointer;list-style:none;padding:22px 44px 22px 0;position:relative;
-  font-family:var(--serif);font-size:20.5px;font-weight:600;color:var(--creme);transition:color .2s ease}
-.qr summary::-webkit-details-marker{display:none}
-.qr summary:hover{color:var(--or)}
-.qr summary::after{content:'+';position:absolute;right:6px;top:50%;transform:translateY(-50%);
-  font-size:26px;color:var(--or);font-family:var(--sans);font-weight:300;transition:transform .25s ease}
-.qr details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
-.qr .rep{padding:0 0 24px;font-size:16.5px;font-weight:300;color:rgba(245,240,232,.76);max-width:62ch}
-
-/* FINAL */
-#final{background:radial-gradient(100% 120% at 50% 0%,var(--bleu-vif) 0%,var(--bleu) 45%,var(--bleu-nuit) 100%);
-  text-align:center;padding:110px 0}
-#final .filet{margin:0 auto 22px}
-#final .lead{margin:0 auto;max-width:46ch}
-.places{margin-top:22px;display:inline-flex;align-items:center;gap:9px;font-size:13.5px;
-  letter-spacing:.05em;color:var(--or);border:1px solid rgba(201,168,76,.4);border-radius:100px;padding:9px 20px}
-.pt{width:7px;height:7px;border-radius:50%;background:var(--or);animation:puls 2s infinite}
-@keyframes puls{0%,100%{opacity:1}50%{opacity:.35}}
-
-footer{background:var(--noir);text-align:center;padding:42px 26px;font-size:13px;color:var(--gris)}
-footer b{display:block;font-family:var(--serif);font-size:20px;color:var(--or);font-weight:600;margin-bottom:5px}
-
-.rev{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.3,1)}
-.rev.on{opacity:1;transform:none}
-:focus-visible{outline:2px solid var(--or);outline-offset:4px}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
-  .rev{opacity:1;transform:none}html{scroll-behavior:auto}}
+:focus-visible{outline:2px solid var(--or);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="wrap">
-    <div class="hero-grid">
-      <div>
-        <div class="eyebrow">Racine &amp; Impact</div>
-        <h1>Tu sais déjà<br/>quoi faire.<em>Alors pourquoi tu ne le fais pas&nbsp;?</em></h1>
-        <p class="hero-sub">Ce n'est pas la motivation qui manque.
-          C'est <b>ton système</b> qui travaille contre toi.<br/>
-          <span style="display:block;margin-top:14px;color:rgba(245,240,232,.7);font-size:18px">
-            En 60 jours, on en construit un qui te fait avancer même les jours
-            où tu n'as envie de rien.</span></p>
-        <a href="candidater.html" class="btn btn-l">Découvrir pourquoi je n'avance pas <span class="fl">→</span></a>
-        <span class="sous-btn">5 minutes · échange de 30 min offert</span>
+<div class="barre"><i id="jauge"></i></div>
+<div class="haut">
+  <span class="marque">Racine &amp; Impact</span>
+  <span class="compteur" id="compteur">01 / 10</span>
+</div>
+
+<div class="scene">
+  <div class="carte">
+
+    <!-- 0 -->
+    <div class="etape on" data-t="prenom-solo">
+      <div class="num">Avant de commencer</div>
+      <h2 class="q">C'est comment, ton prénom&nbsp;?</h2>
+      <p class="aide">Pour qu'on se parle simplement, dès la première question.</p>
+      <input type="text" id="prenom" autocomplete="given-name" placeholder="Ton prénom"/>
+      <div class="erreur">Indique ton prénom pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button></div>
+    </div>
+
+    <!-- 1 -->
+    <div class="etape" data-t="choix" data-c="duree">
+      <div class="num">Question 01</div>
+      <h2 class="q">Depuis combien de temps tu portes ton projet&nbsp;?</h2>
+      <p class="aide">Ce qui compte, ce n'est pas l'ancienneté. C'est que tu l'aies gardé vivant.</p>
+      <div class="choix">
+        <button type="button" class="opt">Moins de 3 mois</button>
+        <button type="button" class="opt">Entre 3 et 12 mois</button>
+        <button type="button" class="opt">Entre 1 et 3 ans</button>
+        <button type="button" class="opt">Plus de 3 ans</button>
       </div>
-      <div class="portrait-wrap">
-        <img class="portrait" src="portrait.png" alt="Franck Doumakpe" onerror="this.style.display='none'"/>
-        <div class="signature"><b>Franck Doumakpe</b><span>Architecte de réussite</span></div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="etape" data-t="texte" data-c="projet">
+      <div class="num">Question 02</div>
+      <h2 class="q">C'est quoi, ton projet&nbsp;?</h2>
+      <p class="aide">Une phrase suffit. Dis-le comme tu le dirais à un ami, pas comme dans un dossier.</p>
+      <textarea placeholder="Par exemple : je veux lancer mon activité de…"></textarea>
+      <div class="erreur">Décris ton projet, même brièvement.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="etape" data-t="texte" data-c="blocage">
+      <div class="num">Question 03</div>
+      <h2 class="q">Qu'est-ce qui bloque, selon toi&nbsp;?</h2>
+      <p class="aide">Ta réponse spontanée. Pas besoin qu'elle soit juste — c'est justement ce qu'on ira vérifier ensemble.</p>
+      <textarea placeholder="Ce qui me bloque, c'est…"></textarea>
+      <div class="erreur">Dis-le avec tes mots, même maladroitement.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="etape" data-t="texte" data-c="essaye">
+      <div class="num">Question 04</div>
+      <h2 class="q">Qu'est-ce que tu as déjà essayé&nbsp;?</h2>
+      <p class="aide">Lectures, formations, applications, coachs, méthodes… et ce que ça a donné.</p>
+      <textarea placeholder="J'ai essayé…"></textarea>
+      <div class="erreur">Réponds en une ligne au minimum.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="etape" data-t="choix" data-c="situation">
+      <div class="num">Question 05</div>
+      <h2 class="q">Ta situation professionnelle aujourd'hui</h2>
+      <p class="aide">Ça change beaucoup de choses sur la manière dont on construira ton système.</p>
+      <div class="choix">
+        <button type="button" class="opt">Salarié·e</button>
+        <button type="button" class="opt">Indépendant·e ou entrepreneur·e</button>
+        <button type="button" class="opt">En reconversion</button>
+        <button type="button" class="opt">Sans activité professionnelle actuellement</button>
+        <button type="button" class="opt">Autre</button>
       </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
     </div>
-  </div>
-</section>
 
-<!-- MIROIR INTERACTIF -->
-<section id="miroir">
-  <div class="wrap">
-    <div class="col">
-      <div class="eyebrow rev">30 secondes</div>
-      <h2 class="rev">Coche ce qui est vrai<br/>pour toi</h2>
-      <p class="lead rev">Sois honnête, personne ne voit tes réponses.</p>
-    </div>
-    <div class="coches rev">
-      <button type="button" class="ch">Tu attends le bon moment. Il n'arrive jamais.</button>
-      <button type="button" class="ch">Tu démarres fort le lundi. Le jeudi, c'est retombé.</button>
-      <button type="button" class="ch">Tu connais la théorie mieux que la plupart des gens.</button>
-      <button type="button" class="ch">Tu te dis que tu manques de rigueur — et tu t'en veux.</button>
-      <button type="button" class="ch">Ton projet ne rate pas. Il n'avance pas. C'est différent, et c'est pire.</button>
-    </div>
-    <div class="verdict" id="verdict">
-      <div class="score" id="score"></div>
-      <p id="verdict-txt"></p>
-      <ul id="negations"></ul>
-      <a href="candidater.html" class="btn" style="margin-top:20px">Découvrir pourquoi je n'avance pas <span class="fl">→</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- THÈSE -->
-<section id="these">
-  <div class="wrap col">
-    <div class="eyebrow rev">Le vrai problème</div>
-    <div class="phrases">
-      <p>Tu portes ce projet depuis des mois.</p>
-      <p>Tu sais exactement ce qu'il faudrait faire.</p>
-      <p>Et pourtant, rien ne bouge vraiment.</p>
-    </div>
-    <p class="lead rev" style="margin-top:32px">Tu as sûrement fini par te dire que tu manquais
-      de discipline. C'est faux. De la discipline, tu en as — sinon tu n'aurais tenu ni ton travail,
-      ni tes engagements, ni ta vie. Le problème, c'est que tu la dépenses dans un décor qui pousse
-      en sens inverse. Chaque action doit être arrachée. Ça coûte une énergie folle. Et à ce
-      jeu-là, le décor gagne toujours.</p>
-
-    <div class="compteur-t rev">
-      <b>Ce que ça coûte vraiment</b>
-      <p style="color:rgba(245,240,232,.82);font-size:17px">Un projet qui échoue, tu en apprends
-        quelque chose. Un projet qui attend, tu n'en apprends rien. Il reste exactement là où tu
-        l'as laissé — pendant que toi, tu vieillis avec. Six mois deviennent deux ans sans que
-        rien ne se décide. C'est ça, le vrai coût : pas l'échec, les années où il ne se passe rien.</p>
-    </div>
-  </div>
-</section>
-
-<!-- HISTOIRE -->
-<section id="histoire">
-  <div class="wrap col">
-    <div class="eyebrow rev">Pourquoi moi</div>
-    <h2 class="rev">Je n'ai rien inventé.<br/>Je l'ai testé sur moi.</h2>
-    <p class="rev">J'ai été caissier, téléconseiller, pâtissier, gestionnaire. À chaque fois je
-      pensais que le problème c'était le métier, que le prochain serait le bon. Ce n'était pas le
-      métier. C'était mon fonctionnement : je changeais de décor en gardant le même système,
-      et je reproduisais exactement les mêmes résultats.</p>
-    <p class="grand rev">Le jour où j'ai arrêté de me demander « qu'est-ce que je dois faire&nbsp;? »
-      pour me demander « qu'est-ce qui m'empêche de le faire&nbsp;? », tout a changé.</p>
-    <p class="rev">Je n'ai pas de méthode miracle. J'ai une méthode que j'applique sur moi depuis
-      des années, sur des choses vérifiables.</p>
-
-    <div class="histoire-bas">
-      <figure class="photo-preuve rev">
-        <img src="franck-micro.jpg" alt="Franck Doumakpe chez lui, devant son micro"
-             loading="lazy" onerror="this.parentElement.style.display='none'"/>
-        <figcaption>Chez moi, un soir de semaine. C'est là que tout se construit.</figcaption>
-      </figure>
-
-      <div class="preuves">
-        <div class="pr rev"><b>3 à 4 séances de sport par semaine</b>
-          <span>Je n'avais aucune motivation pour le sport. Aujourd'hui c'est devenu un
-            automatisme — et mes enfants le voient.</span></div>
-        <div class="pr rev"><b>L'alcool, arrêté</b>
-          <span>Pas par religion, pas par interdiction. Parce que mon identité a changé,
-            et que l'environnement a suivi.</span></div>
-        <div class="pr rev"><b>Une activité lancée en gardant mon CDI</b>
-          <span>37 heures par semaine, deux enfants en garde partagée, et ce projet construit
-            le soir et le dimanche.</span></div>
-        <div class="pr rev"><b>La parole en public</b>
-          <span>J'ai été tétanisé à l'idée de parler devant des gens et de me montrer en ligne.
-            Pendant des années. Aujourd'hui je publie chaque semaine.</span></div>
+    <!-- 6 -->
+    <div class="etape" data-t="choix" data-c="dispo">
+      <div class="num">Question 06</div>
+      <h2 class="q">Combien de temps tu peux vraiment y consacrer par semaine&nbsp;?</h2>
+      <p class="aide">Pas dans l'idéal. Cette semaine, avec ta vie telle qu'elle est aujourd'hui.</p>
+      <div class="choix">
+        <button type="button" class="opt">Moins de 2 heures</button>
+        <button type="button" class="opt">Entre 2 et 4 heures</button>
+        <button type="button" class="opt">Entre 4 et 7 heures</button>
+        <button type="button" class="opt">Plus de 7 heures</button>
       </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <p class="rev" style="margin-top:30px">Aucune de ces choses n'est venue d'un sursaut de
-      volonté. Toutes sont venues d'un système : un déclencheur, un environnement modifié,
-      une action rendue plus facile que son évitement. C'est exactement ce qu'on construira
-      pour toi.</p>
-  </div>
-</section>
-
-<!-- MÉTHODE -->
-<section id="methode">
-  <div class="wrap">
-    <div class="col">
-      <div class="eyebrow rev">La méthode</div>
-      <h2 class="rev">Cartographie du<br/>Système de Réussite</h2>
-      <p class="lead rev">Cinq étapes, toujours dans cet ordre. Chacune conditionne la suivante —
-        c'est ce qui évite de bâtir un système sur une base fausse.</p>
-    </div>
-    <div class="etapes">
-      <div class="et rev"><span class="n">01</span><h3>La Destination</h3>
-        <p>Ton objectif est-il vraiment le tien, et jouable avec ton temps, ton argent et ton
-          énergie réels ? Si non, on le réduit jusqu'à ce qu'il devienne vrai.</p></div>
-      <div class="et rev"><span class="n">02</span><h3>Les Racines</h3>
-        <p>Ce qui bloque exactement : tu ne peux pas, tu ne sais pas, tu n'oses pas, ou tu ne
-          veux pas vraiment. Une seule racine — et le besoin qu'elle protège.</p></div>
-      <div class="et rev"><span class="n">03</span><h3>Le Terrain</h3>
-        <p>Les gens, le lieu, les outils, l'organisation. On change deux ou trois choses pour que
-          ton environnement arrête de te coûter de l'énergie.</p></div>
-      <div class="et rev"><span class="n">04</span><h3>Le Mécanisme</h3>
-        <p>Un enchaînement où chaque action déclenche la suivante. Les frictions retirées.
-          Et la panne prévue à l'avance, pour la semaine où tu ne feras rien.</p></div>
-      <div class="et rev"><span class="n">05</span><h3>La Preuve</h3>
-        <p>Trois indicateurs relevés à chaque séance. Tu ne me crois pas sur parole :
-          tu regardes ta courbe.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- DÉROULÉ -->
-<section id="deroule">
-  <div class="wrap">
-    <div class="col">
-      <div class="eyebrow rev">Concrètement</div>
-      <h2 class="rev">Comment ça se passe</h2>
-      <p class="lead rev">Les écarts s'allongent volontairement. Sept jours ne testent rien —
-        tu es encore porté par l'élan. Ce qui tient trois semaines sans moi, c'est un système.</p>
-    </div>
-    <div class="timeline">
-      <div class="tl rev"><span class="j">Jour 0 · 90 min</span><h3>La Destination</h3>
-        <p>Tu repars avec un objectif jouable et un premier geste de moins de 60 secondes,
-          à faire dès le lendemain.</p></div>
-      <div class="tl rev"><span class="j">Jour 7 · 90 min</span><h3>Les Racines</h3>
-        <p>On descend jusqu'à la vraie cause, puis jusqu'au besoin qu'elle protège.
-          On s'arrête quand tu dis « oui, c'est exactement ça ».</p></div>
-      <div class="tl rev"><span class="j">Jour 21 · 60 min</span><h3>Le Terrain</h3>
-        <p>Deux ou trois changements physiques et vérifiables dans ton environnement.</p></div>
-      <div class="tl rev"><span class="j">Jour 35 · 60 min</span><h3>Le Mécanisme</h3>
-        <p>On règle ton enchaînement avec cinq semaines de données réelles, et on prépare
-          la panne.</p></div>
-      <div class="tl rev"><span class="j">Jour 56 · 60 min</span><h3>La Preuve</h3>
-        <p>On regarde ta courbe. Puis tu refais la méthode seul sur un autre objectif —
-          c'est le vrai livrable.</p></div>
-    </div>
-    <div class="inclus">
-      <div class="inc rev"><b>Un point automatique chaque semaine</b><span>Un message, toujours le
-        même jour : action faite ou pas faite. Deux mots à répondre.</span></div>
-      <div class="inc rev"><b>Si tu décroches, je viens te chercher</b><span>Deux silences
-        d'affilée et je t'appelle. C'est prévu dans la méthode.</span></div>
-      <div class="inc rev"><b>WhatsApp entre les séances</b><span>Questions courtes et partage
-        d'avancées. Réponse sous 24h en semaine.</span></div>
-      <div class="inc rev"><b>Tes documents restent à toi</b><span>Ta carte, ton scénario écrit,
-        ton relevé d'indicateurs — après le parcours aussi.</span></div>
-    </div>
-
-    <div class="col" style="margin-top:56px">
-      <h3 style="color:var(--or);font-size:26px;margin-bottom:20px">Ce que ça change, concrètement</h3>
-      <p class="lead">Tu ouvres ton ordinateur sans négocier avec toi-même pendant vingt minutes.
-        Tu termines une semaine à peu près comme tu l'avais prévue — pas parfaitement, mais
-        assez pour que ça compte. Tu ne te demandes plus si tu vas t'y mettre : tu sais à quel
-        moment ça se passe, et ça se passe.</p>
-      <p class="lead" style="margin-top:16px">Et le dimanche soir, quand tu regardes ta semaine,
-        il s'est passé quelque chose. Pas un exploit. Quelque chose. Toutes les semaines.</p>
-    </div>
-  </div>
-</section>
-
-<!-- TÉMOIGNAGES -->
-<section id="temoins">
-  <div class="wrap">
-    <div class="col">
-      <div class="eyebrow rev">Ce que ça a produit</div>
-      <h2 class="rev">Ils sont passés<br/>à l'action</h2>
-    </div>
-    <div class="grille-t">
-      <div class="tm rev">
-        <div class="res">A lancé son activité</div>
-        <q>J'ai beaucoup de travail à faire sur moi, que j'ai commencé depuis quelque temps déjà,
-          mais c'est tellement enkysté. Merci d'être là pour moi. Tu as bien choisi ta voie.</q>
-        <cite>Vincent</cite>
+    <!-- 7 -->
+    <div class="etape" data-t="choix" data-c="engagement">
+      <div class="num">Question 07</div>
+      <h2 class="q">Si on décide ensemble que c'est le bon moment, tu es prêt à t'engager sur 60 jours&nbsp;?</h2>
+      <p class="aide">Réponds honnêtement. Aucune réponse ne te disqualifie — elle change juste ce dont on parlera.</p>
+      <div class="choix">
+        <button type="button" class="opt">Oui, c'est exactement ce que je cherche</button>
+        <button type="button" class="opt">Oui, si je comprends comment ça se passe concrètement</button>
+        <button type="button" class="opt">Je ne sais pas encore, je veux d'abord en parler</button>
       </div>
-      <div class="tm rev">
-        <div class="res">A débloqué sa procrastination</div>
-        <q>Merci pour ton accompagnement. Je ne sais pas où j'en serais sans toi.</q>
-        <cite>Thérapeute · prénom modifié</cite>
-      </div>
-      <div class="tm rev" style="grid-column:1/-1">
-        <div class="res">A identifié ce qui bloquait depuis des années</div>
-        <q>Après 2h de discussion, j'ai eu tellement d'éclaircissement dans les limitations que
-          je m'imposais. Toutes les choses qui ne marchaient pas n'étaient que le fruit de mes
-          croyances mal placées. Merci de m'avoir aidé à mettre un doigt sur ça.</q>
-        <cite>Damien</cite>
-      </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
     </div>
-    <p class="note rev"><b>Ce que ces témoignages ne disent pas encore.</b> Les parcours 60 jours
-      complets viennent de démarrer. Leurs résultats chiffrés apparaîtront ici quand ils seront
-      terminés — pas avant. Les trois premières places sont celles qui écriront ces retours-là.</p>
-  </div>
-</section>
 
-<!-- NIVEAUX -->
-<section id="niveaux">
-  <div class="wrap">
-    <div class="col">
-      <div class="eyebrow rev">Trois façons de commencer</div>
-      <h2 class="rev">Tu n'es pas obligé<br/>de tout prendre</h2>
-      <p class="lead rev">Selon où tu en es, il y a trois portes. Toutes commencent par le même
-        échange — c'est là qu'on décide ensemble, pas avant.</p>
+    <!-- 8 -->
+    <div class="etape" data-t="tel-dispo">
+      <div class="num">Question 08</div>
+      <h2 class="q">Ton numéro, et les moments où te joindre&nbsp;?</h2>
+      <p class="aide">Choisis jusqu'à 3 moments où tu es le plus disponible pour un appel.</p>
+      <span class="lbl">Ton numéro de téléphone</span>
+      <input type="tel" id="telephone" autocomplete="tel" placeholder="06 12 34 56 78" style="margin-bottom:24px"/>
+      <span class="lbl">Tes créneaux préférés</span>
+      <div class="choix choix-multi">
+        <button type="button" class="opt">Matin (8h – 12h)</button>
+        <button type="button" class="opt">Midi (12h – 14h)</button>
+        <button type="button" class="opt">Après-midi (14h – 18h)</button>
+        <button type="button" class="opt">Soir (18h – 20h)</button>
+      </div>
+      <div class="erreur">Indique ton numéro et au moins un créneau.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
     </div>
-    <div class="niv">
-      <div class="n1 rev">
-        <div class="nom">L'échange</div>
-        <div class="duree">30 minutes · en visio</div>
-        <div class="tarif">Offert</div>
-        <p class="desc">On regarde ta situation. Tu repars avec un élément clair sur ce qui te
-          bloque, que la suite se fasse ou non. Si je ne suis pas la bonne personne, je te le dis.</p>
-        <a href="candidater.html" class="lien">Réserver mon échange →</a>
-      </div>
-      <div class="n1 rev">
-        <div class="nom">La Cartographie</div>
-        <div class="duree">90 minutes · séance unique</div>
-        <div class="tarif">247 €</div>
-        <p class="desc">Un diagnostic complet en une séance. Ton système actuel, la racine exacte
-          du blocage, et ton plan des 30 prochains jours.</p>
-        <a href="candidater.html" class="lien">Faire mon diagnostic →</a>
-      </div>
-      <div class="n1 phare rev">
-        <span class="badge">3 places au lancement</span>
-        <div class="nom">La Carte de Réussite</div>
-        <div class="duree">60 jours · 5 séances</div>
-        <div class="tarif">747 € <small>puis 997 €</small></div>
-        <p class="desc">Le parcours complet. On ne s'arrête pas au diagnostic : on construit le
-          système, on l'installe, on le règle, et on vérifie qu'il tient sans moi.
-          Garantie incluse.</p>
-        <a href="candidater.html" class="lien">Candidater →</a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- GARANTIE -->
-<section id="garantie">
-  <div class="wrap col">
-    <div class="eyebrow rev">L'engagement</div>
-    <h2 class="rev">Ce que je garantis —<br/>et ce que je ne peux pas</h2>
-    <p class="lead rev">Personne ne peut te garantir un résultat, parce que personne ne peut
-      exécuter à ta place. Quiconque te le promet te ment. Voici ce que je tiens.</p>
-    <div class="gbox rev">
-      <div class="h"><b>Si ça n'a pas bougé, je continue sans frais</b></div>
-      <div class="c">
-        Au bout des 60 jours, si tes trois indicateurs n'ont pas progressé,
-        <b>je continue à t'accompagner gratuitement jusqu'à ce qu'ils bougent.</b>
-        Pas un remboursement : du travail en plus. Parce que le but n'est pas que tu récupères
-        ton argent, c'est que ton projet avance.
-        <div class="cond">La condition est simple et vérifiable : avoir fait les cinq séances et
-          appliqué le système convenu. On mesure tout à chaque séance — aucune ambiguïté possible,
-          ni pour toi ni pour moi.</div>
-      </div>
+    <!-- 9 -->
+    <div class="etape" data-t="contact">
+      <div class="num">Dernière étape</div>
+      <h2 class="q">Où je te réponds&nbsp;?</h2>
+      <p class="aide">Je lis ta candidature moi-même et je reviens vers toi sous 72 heures.</p>
+      <span class="lbl">Ton email</span>
+      <input type="email" id="email" autocomplete="email" placeholder="prenom@email.com"/>
+      <div class="erreur" id="err-contact">Vérifie ton adresse email.</div>
+      <div class="pied"><button class="btn" id="envoyer">Envoyer ma candidature</button>
+        <button class="retour" data-retour>← Retour</button></div>
+      <p class="rgpd">Tes réponses me sont envoyées par email et servent uniquement à préparer
+        notre échange. Elles ne sont ni revendues ni utilisées à d'autres fins. Tu peux
+        demander leur suppression à tout moment.</p>
     </div>
-  </div>
-</section>
 
-<!-- POUR QUI -->
-<section id="pourqui">
-  <div class="wrap">
-    <div class="col">
-      <div class="eyebrow rev">Avant de candidater</div>
-      <h2 class="rev">Ce n'est pas<br/>pour tout le monde</h2>
-      <p class="lead rev">Je n'accompagne que deux à trois personnes par mois.</p>
+    <!-- CONFIRMATION -->
+    <div id="fin">
+      <div class="coche">✓</div>
+      <h2 class="q" id="fin-titre">C'est enregistré.</h2>
+      <p class="aide" style="margin:0 auto 6px">Tu viens de faire quelque chose que la plupart
+        des gens repoussent encore.</p>
+      <ul class="suite">
+        <li><b>01</b> Je lis ta candidature en entier, moi-même.</li>
+        <li><b>02</b> Je te réponds sous 72 heures avec deux ou trois créneaux.</li>
+        <li><b>03</b> On échange 30 minutes. Tu repars avec un élément clair, que la suite se fasse ou non.</li>
+      </ul>
+      <p class="final-note">Si je ne suis pas la bonne personne pour ce que tu vis, je te le
+        dirai — et je t'orienterai ailleurs. C'est aussi à ça que sert cet échange.</p>
     </div>
-    <div class="duo2">
-      <div class="bloc oui rev">
-        <h3>C'est pour toi si…</h3>
-        <ul>
-          <li>Tu portes un projet depuis plusieurs mois et il n'avance pas.</li>
-          <li>Tu sais quoi faire — le problème n'est pas l'information.</li>
-          <li>Tu es prêt à changer des choses concrètes dans ton quotidien.</li>
-          <li>Tu acceptes de mesurer, même quand les chiffres ne sont pas flatteurs.</li>
-        </ul>
-      </div>
-      <div class="bloc non rev">
-        <h3>Ce n'est pas pour toi si…</h3>
-        <ul>
-          <li>Tu cherches quelqu'un qui te motive chaque matin. Ce n'est pas mon travail.</li>
-          <li>Tu veux une méthode à appliquer sans rien modifier de ta vie.</li>
-          <li>Tu traverses une période où tu as besoin d'un psychologue plutôt que d'un système —
-            je te le dirai franchement, et je t'orienterai.</li>
-          <li>Tu attends des résultats sans exécution. Je construis le système, tu l'exécutes.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- OBJECTIONS -->
-<section id="objections">
-  <div class="wrap col">
-    <div class="eyebrow rev">Les questions qu'on me pose</div>
-    <h2 class="rev">Avant que tu te<br/>les poses tout seul</h2>
-    <div class="qr rev">
-      <details>
-        <summary>J'ai déjà essayé des méthodes. Pourquoi ça marcherait cette fois&nbsp;?</summary>
-        <div class="rep">Parce que la plupart s'adressent à ta volonté et te demandent d'être plus
-          rigoureux. Celle-ci s'adresse à ton environnement et à tes déclencheurs. Tu n'auras pas
-          à devenir quelqu'un d'autre : on modifie ce qui t'entoure pour que l'action devienne
-          le chemin le plus facile.</div>
-      </details>
-      <details>
-        <summary>Je n'ai pas le temps. C'est justement le problème.</summary>
-        <div class="rep">Six heures de séance en deux mois. Et l'étape 1 sert exactement à ça :
-          ramener ton objectif à ce que ton temps réel permet. Si tu n'as que deux heures par
-          semaine, on construit pour deux heures par semaine — pas pour la vie que tu aurais
-          si tu ne travaillais pas.</div>
-      </details>
-      <details>
-        <summary>Et si j'abandonne en cours de route&nbsp;?</summary>
-        <div class="rep">C'est prévu. La séance 4 contient une étape appelée « la panne » :
-          on définit à l'avance ce que tu fais la semaine où tu ne fais rien, et à quel signal tu
-          redémarres. Et si tu ne réponds pas deux fois au point hebdomadaire, je t'appelle.
-          Décrocher fait partie du parcours — être laissé seul, non.</div>
-      </details>
-      <details>
-        <summary>Est-ce que ça marche pour autre chose qu'un projet professionnel&nbsp;?</summary>
-        <div class="rep">Oui. La méthode est la même pour reprendre le sport, changer une habitude,
-          finir une formation ou lancer une activité. Ce qui change, c'est ta racine et ton
-          décor — pas la structure.</div>
-      </details>
-    </div>
   </div>
-</section>
-
-<!-- FINAL -->
-<section id="final">
-  <div class="wrap">
-    <div class="filet"></div>
-    <h2 class="rev">Sept questions,<br/>cinq minutes.</h2>
-    <p class="lead rev">Je lis chaque candidature moi-même et je réponds sous 72 heures.
-      Si je ne suis pas la bonne personne pour ce que tu vis, je te le dirai.</p>
-    <a href="candidater.html" class="btn btn-l rev">Découvrir pourquoi je n'avance pas <span class="fl">→</span></a>
-    <div class="places rev"><span class="pt"></span> 3 places au tarif de lancement</div>
-  </div>
-</section>
-
-<footer>
-  <b>Racine &amp; Impact</b>
-  Franck Doumakpe · Architecte de réussite
-  <p style="margin-top:10px;font-size:13px;opacity:.65;font-weight:300">Accompagnement en visioconférence partout en France · séances en présentiel possibles en Charente (Angoulême et alentours)</p>
-</footer>
+</div>
 
 <script>
-/* miroir interactif */
-const coches = document.querySelectorAll(".ch");
-const verdict = document.getElementById("verdict");
-const score = document.getElementById("score");
-const vtxt = document.getElementById("verdict-txt");
-const liste = document.getElementById("negations");
+/* ─── EmailJS ───
+   ⚠ Crée un NOUVEAU template EmailJS pour ce formulaire et remplace TEMPLATE_CANDIDATURE.
+   Variables : {{prenom}} {{email}} {{telephone}} {{creneaux}} {{duree}} {{projet}}
+               {{blocage}} {{essaye}} {{situation}} {{dispo}} {{engagement}}
+*/
+const EMAILJS_PUBLIC  = "3Dd1W0QbxF_U1_Gvd";
+const EMAILJS_SERVICE = "service_n2629zq";
+const EMAILJS_TEMPLATE = "template_pssylts";
+emailjs.init(EMAILJS_PUBLIC);
 
-const messages = {
-  1: ["Une seule, mais elle suffit.",
-      "Un seul point, tenu pendant des mois, suffit à immobiliser un projet entier. Ce n'est pas une question de gravité, mais de durée."],
-  2: ["Deux sur cinq.",
-      "Ce ne sont pas deux problèmes séparés. C'est le même mécanisme qui produit deux symptômes différents."],
-  3: ["Trois sur cinq.",
-      "Ce n'est plus une mauvaise passe. C'est un système qui produit exactement ces résultats-là, semaine après semaine."],
-  4: ["Quatre sur cinq.",
-      "Tu n'as pas un problème de volonté. Tu as une volonté réelle qui se dépense contre un décor qui pousse en sens inverse."],
-  5: ["Cinq sur cinq.",
-      "Tu viens de décrire précisément ce que j'accompagne. Ce n'est pas un cas particulier : c'est un mécanisme connu."]
-};
+const etapes = [...document.querySelectorAll(".etape")];
+const jauge = document.getElementById("jauge");
+const compteur = document.getElementById("compteur");
+const reponses = {};
+let i = 0;
 
-const negations = [
-  "Tu n'as probablement pas besoin de plus de discipline.",
-  "Tu n'as probablement pas besoin d'une formation de plus.",
-  "Tu n'as probablement pas besoin d'un livre de plus.",
-  "Tu as besoin d'identifier la racine qui produit ce comportement."
-];
+function afficher(n){
+  etapes[i].classList.remove("on");
+  i = n;
+  etapes[i].classList.add("on");
+  const p = (i / etapes.length) * 100;
+  jauge.style.width = p + "%";
+  compteur.textContent = String(i + 1).padStart(2,"0") + " / " + String(etapes.length).padStart(2,"0");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  const f = etapes[i].querySelector("textarea, input");
+  if (f && window.innerWidth > 760) setTimeout(() => f.focus(), 320);
+}
 
-coches.forEach(b => b.addEventListener("click", () => {
-  b.classList.toggle("on");
-  const n = document.querySelectorAll(".ch.on").length;
-  if (n === 0){ verdict.classList.remove("on"); liste.innerHTML = ""; return; }
-  score.textContent = messages[n][0];
-  vtxt.textContent = messages[n][1];
-  liste.innerHTML = "";
-  if (n >= 3){
-    negations.forEach((t, k) => {
-      const li = document.createElement("li");
-      li.textContent = t;
-      if (k === negations.length - 1) li.className = "cle";
-      li.style.animationDelay = (k * 130) + "ms";
-      liste.appendChild(li);
+/* choix — sélection unique */
+document.querySelectorAll(".choix:not(.choix-multi)").forEach(groupe => {
+  groupe.querySelectorAll(".opt").forEach(b => {
+    b.addEventListener("click", () => {
+      groupe.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
+      b.classList.add("sel");
+      groupe.parentElement.querySelector(".erreur").classList.remove("on");
     });
-  }
-  verdict.classList.add("on");
-}));
-
-/* apparitions */
-const io = new IntersectionObserver(es => {
-  es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); } });
-}, { threshold: .14, rootMargin: "0px 0px -40px 0px" });
-document.querySelectorAll(".rev, .phrases p").forEach((el, i) => {
-  el.style.transitionDelay = (i % 4) * 80 + "ms";
-  io.observe(el);
+  });
 });
+
+/* choix — sélection multiple (créneaux), max 3 */
+document.querySelectorAll(".choix-multi").forEach(groupe => {
+  groupe.querySelectorAll(".opt").forEach(b => {
+    b.addEventListener("click", () => {
+      const deja = groupe.querySelectorAll(".opt.sel").length;
+      if (!b.classList.contains("sel") && deja >= 3) return;
+      b.classList.toggle("sel");
+      groupe.parentElement.querySelector(".erreur").classList.remove("on");
+    });
+  });
+});
+document.querySelectorAll("textarea").forEach(t => {
+  t.addEventListener("input", () => t.parentElement.querySelector(".erreur").classList.remove("on"));
+});
+
+function valide(et){
+  const err = et.querySelector(".erreur");
+  const type = et.dataset.t;
+  if (type === "choix"){
+    const s = et.querySelector(".opt.sel");
+    if (!s){ err.classList.add("on"); return false; }
+    reponses[et.dataset.c] = s.textContent.trim();
+    return true;
+  }
+  if (type === "texte"){
+    const v = et.querySelector("textarea").value.trim();
+    if (v.length < 3){ err.classList.add("on"); return false; }
+    reponses[et.dataset.c] = v;
+    return true;
+  }
+  if (type === "prenom-solo"){
+    const v = et.querySelector("#prenom").value.trim();
+    if (v.length < 1){ err.classList.add("on"); return false; }
+    reponses.prenom = v;
+    return true;
+  }
+  if (type === "tel-dispo"){
+    const tel = et.querySelector("#telephone").value.trim();
+    const telOk = /^[\d\s+().-]{8,}$/.test(tel);
+    const creneaux = [...et.querySelectorAll(".opt.sel")].map(b => b.textContent.trim());
+    if (!telOk || creneaux.length === 0){ err.classList.add("on"); return false; }
+    reponses.telephone = tel;
+    reponses.creneaux = creneaux.join(", ");
+    return true;
+  }
+  return true;
+}
+
+document.querySelectorAll("[data-suivant]").forEach(b => {
+  b.addEventListener("click", () => {
+    const et = b.closest(".etape");
+    if (valide(et)) afficher(i + 1);
+  });
+});
+document.querySelectorAll("[data-retour]").forEach(b => {
+  b.addEventListener("click", () => afficher(i - 1));
+});
+
+/* envoi */
+const envoyer = document.getElementById("envoyer");
+envoyer.addEventListener("click", async () => {
+  const email  = document.getElementById("email").value.trim();
+  const err = document.getElementById("err-contact");
+  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  if (!ok){ err.textContent = "Vérifie ton adresse email."; err.classList.add("on"); return; }
+  err.classList.remove("on");
+
+  reponses.email = email;
+
+  envoyer.disabled = true;
+  envoyer.textContent = "Envoi en cours…";
+
+  try{
+    await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, reponses);
+    etapes[i].classList.remove("on");
+    jauge.style.width = "100%";
+    compteur.textContent = "TERMINÉ";
+    const p = reponses.prenom || "";
+    document.getElementById("fin-titre").textContent =
+      p.charAt(0).toUpperCase() + p.slice(1).toLowerCase() + ", c'est enregistré.";
+    document.getElementById("fin").classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }catch(e){
+    console.error(e);
+    envoyer.disabled = false;
+    envoyer.textContent = "Envoyer ma candidature";
+    err.textContent = "L'envoi n'a pas abouti. Réessaie, ou écris-moi à contact.racineetimpact@gmail.com.";
+    err.classList.add("on");
+  }
+});
+
+jauge.style.width = "0%";
 </script>
 </body>
 </html>
