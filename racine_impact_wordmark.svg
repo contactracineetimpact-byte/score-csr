@@ -1,0 +1,26 @@
+<svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .stem { stroke: #C9A84C; stroke-width: 5; fill: none; stroke-linecap: round; }
+      .hairroot { stroke: #C9A84C; stroke-width: 3; fill: none; stroke-linecap: round; opacity: 0.75; }
+      .word { font-family: Georgia, 'Times New Roman', serif; fill: #16276B; }
+      .tagline { font-family: Arial, Helvetica, sans-serif; fill: #6b7280; letter-spacing: 3px; }
+    </style>
+  </defs>
+
+  <!-- mark, translated into the left column -->
+  <g transform="translate(0,0)">
+    <path class="stem" d="M100,118 C90,140 75,150 60,178"/>
+    <path class="stem" d="M100,118 C100,145 100,160 100,186"/>
+    <path class="stem" d="M100,118 C110,140 125,150 140,178"/>
+    <path class="hairroot" d="M86,147 C79,157 66,161 56,171"/>
+    <path class="hairroot" d="M114,147 C121,157 134,161 144,171"/>
+    <path class="stem" d="M100,118 L100,58"/>
+    <path fill="#C9A84C" d="M0,0 C9,-16 9,-38 0,-52 C-9,-38 -9,-16 0,0 Z" transform="translate(100,58) rotate(-34) scale(0.62)"/>
+    <path fill="#C9A84C" d="M0,0 C9,-16 9,-38 0,-52 C-9,-38 -9,-16 0,0 Z" transform="translate(100,58) rotate(34) scale(0.62)"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="190" y="100" class="word" font-size="52" letter-spacing="2">RACINE <tspan fill="#C9A84C">&amp;</tspan> IMPACT</text>
+  <text x="190" y="135" class="tagline" font-size="16">ARCHITECTE DE SYST&#200;MES DE R&#201;USSITE</text>
+</svg>
