@@ -54,10 +54,12 @@ p{font-weight:300}
   max-width:100%;text-align:center;line-height:1.3;
   transition:transform .2s cubic-bezier(.2,.8,.3,1),box-shadow .2s ease,background .2s ease}
 .btn .fl{flex-shrink:0}
-.hero-logo{height:64px;width:auto;margin-bottom:28px}
+.hero-logo-row img{transition:height .2s}
 @media(max-width:520px){
   .btn{font-size:13px;padding:17px 24px;letter-spacing:.05em}
-  .hero-logo{height:58px;margin-bottom:22px}
+  .hero-logo-row{gap:10px!important;margin-bottom:22px!important}
+  .hero-logo-row img{height:42px!important}
+  .hero-logo-row div div:first-child{font-size:16px!important}
 }
 .btn:hover{background:var(--or-clair);transform:translateY(-3px);box-shadow:0 14px 34px rgba(201,168,76,.3)}
 .btn .fl{transition:transform .2s ease}
@@ -279,7 +281,13 @@ footer b{display:block;font-family:var(--serif);font-size:20px;color:var(--or);f
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <img src="racine_impact_wordmark.svg" alt="Racine &amp; Impact — Architecte de Systèmes de Réussite" class="hero-logo" onerror="this.onerror=null;this.src='racine_impact_wordmark.png'"/>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px" class="hero-logo-row">
+          <img src="racine_impact_symbole.svg" alt="" style="height:52px;width:auto;flex-shrink:0"/>
+          <div>
+            <div style="font-family:var(--serif);font-size:20px;font-weight:600;letter-spacing:.04em;color:var(--creme);line-height:1.15">RACINE <span style="color:var(--or)">&amp;</span> IMPACT</div>
+            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.55);margin-top:2px">Architecte de Systèmes de Réussite</div>
+          </div>
+        </div>
         <h1>Tu sais déjà<br/>quoi faire.<em>Alors pourquoi tu ne le fais pas&nbsp;?</em></h1>
         <p class="hero-sub">Ce n'est pas la motivation qui manque.
           C'est <b>ton système</b> qui travaille contre toi.<br/>
