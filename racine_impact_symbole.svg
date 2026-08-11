@@ -1,0 +1,22 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .stem { stroke: #C9A84C; stroke-width: 5; fill: none; stroke-linecap: round; }
+      .hairroot { stroke: #C9A84C; stroke-width: 3; fill: none; stroke-linecap: round; opacity: 0.75; }
+    </style>
+  </defs>
+
+  <!-- roots (below the seed point) -->
+  <path class="stem" d="M100,118 C90,140 75,150 60,178"/>
+  <path class="stem" d="M100,118 C100,145 100,160 100,186"/>
+  <path class="stem" d="M100,118 C110,140 125,150 140,178"/>
+  <path class="hairroot" d="M86,147 C79,157 66,161 56,171"/>
+  <path class="hairroot" d="M114,147 C121,157 134,161 144,171"/>
+
+  <!-- stem -->
+  <path class="stem" d="M100,118 L100,58"/>
+
+  <!-- sprout: two pointed leaves -->
+  <path fill="#C9A84C" d="M0,0 C9,-16 9,-38 0,-52 C-9,-38 -9,-16 0,0 Z" transform="translate(100,58) rotate(-34) scale(0.62)"/>
+  <path fill="#C9A84C" d="M0,0 C9,-16 9,-38 0,-52 C-9,-38 -9,-16 0,0 Z" transform="translate(100,58) rotate(34) scale(0.62)"/>
+</svg>
