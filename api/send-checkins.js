@@ -65,8 +65,13 @@ function heureMatchesWindow(heurePref, windowHour, windowMinute) {
 }
 
 async function fetchActiveClients() {
+  // Note : on ne filtre ici que sur {Actif}, un champ sans caractère spécial.
+  // Le filtre "Check-in prévu aujourd'hui" est volontairement appliqué plus bas,
+  // côté JS, sur le champ FIELD_CHECKIN_PREVU (identifié par son ID, pas son nom).
+  // Filtrer par nom de champ contenant une apostrophe dans une formule Airtable
+  // s'est révélé peu fiable (le filtre échouait silencieusement, sans erreur).
   const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(
-    'AND({Actif}=1, {Check-in prévu aujourd\'hui}=1)'
+    '{Actif}=1'
   )}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
@@ -118,6 +123,11 @@ export default async function handler(req, res) {
     const chatId = f[FIELD_CHAT_ID];
     const dernierEnvoi = f[FIELD_DERNIER_ENVOI];
     const prenom = f[FIELD_PRENOM];
+    const checkinPrevu = f[FIELD_CHECKIN_PREVU];
+
+    if (checkinPrevu !== 1) {
+      continue; // pas dans la fenêtre du programme aujourd'hui
+    }
 
     if (dernierEnvoi === today) {
       continue; // déjà envoyé aujourd'hui
