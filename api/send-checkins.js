@@ -70,7 +70,7 @@ async function fetchActiveClients() {
   // côté JS, sur le champ FIELD_CHECKIN_PREVU (identifié par son ID, pas son nom).
   // Filtrer par nom de champ contenant une apostrophe dans une formule Airtable
   // s'est révélé peu fiable (le filtre échouait silencieusement, sans erreur).
-  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(
+  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_ID}?returnFieldsByFieldId=true&filterByFormula=${encodeURIComponent(
     '{Actif}=1'
   )}`;
   const res = await fetch(url, {
