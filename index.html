@@ -272,9 +272,43 @@ footer b{display:block;font-family:var(--serif);font-size:20px;color:var(--or);f
 :focus-visible{outline:2px solid var(--or);outline-offset:4px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
   .rev{opacity:1;transform:none}html{scroll-behavior:auto}}
+
+/* ── MENU COLLANT ── */
+.nav-site{position:sticky;top:0;z-index:60;background:rgba(9,17,50,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(245,240,232,.1);display:flex;align-items:center;justify-content:space-between;padding:12px 24px;gap:16px}
+.nav-site .nav-brand{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-site .nav-brand img{height:26px;width:auto}
+.nav-site .nav-brand span{font-family:var(--serif);font-size:14px;color:var(--creme);letter-spacing:.03em;white-space:nowrap}
+.nav-links{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:rgba(245,240,232,.75);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:color .2s}
+.nav-links a:hover{color:var(--or)}
+.nav-cta{flex-shrink:0;background:var(--or);color:var(--bleu-nuit);padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .2s}
+.nav-cta:hover{background:var(--or-clair)}
+@media(max-width:760px){
+  .nav-site{padding:10px 16px}
+  .nav-brand span{display:none}
+  .nav-links{gap:16px}
+  .nav-links a{font-size:12px}
+}
 </style>
 </head>
 <body>
+
+<!-- MENU -->
+<nav class="nav-site">
+  <a href="#hero" class="nav-brand">
+    <img src="racine_impact_symbole.svg" alt=""/>
+    <span>Racine &amp; Impact</span>
+  </a>
+  <div class="nav-links">
+    <a href="#methode">Méthode</a>
+    <a href="#deroule">Déroulé</a>
+    <a href="#temoins">Témoignages</a>
+    <a href="#niveaux">Offre</a>
+    <a href="#garantie">Garantie</a>
+  </div>
+  <a href="candidater.html" class="nav-cta">Candidater</a>
+</nav>
 
 <!-- HERO -->
 <section id="hero">
