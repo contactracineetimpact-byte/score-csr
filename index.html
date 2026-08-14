@@ -216,10 +216,17 @@ p{font-weight:300}
 @media(min-width:820px){.grille-t{grid-template-columns:1fr 1fr}}
 .tm{background:linear-gradient(140deg,rgba(22,39,107,.5),rgba(22,39,107,.16));
   border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:26px 24px}
-.tm .res{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:12px;font-weight:600}
+.tm-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tm-avatar{width:42px;height:42px;border-radius:50%;background:var(--bleu);border:1.5px solid var(--or);
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:600;
+  font-size:18px;color:var(--or-clair);flex-shrink:0}
+.tm .res{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:0;font-weight:600}
 .tm q{display:block;font-family:var(--serif);font-size:19px;font-style:italic;line-height:1.5;quotes:none}
 .tm q::before,.tm q::after{content:''}
 .tm cite{display:block;margin-top:14px;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,232,.5)}
+.tm-audio{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-size:11.5px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--or);opacity:.85}
+.tm-audio svg{flex-shrink:0}
 .note{margin-top:28px;padding:20px 24px;border-left:2px solid var(--or);background:rgba(245,240,232,.04);
   font-size:15.5px;font-weight:300;color:rgba(245,240,232,.72);border-radius:0 4px 4px 0;max-width:660px}
 .note b{color:var(--creme);font-weight:500}
@@ -518,22 +525,54 @@ footer b{display:block;font-family:var(--serif);font-size:20px;color:var(--or);f
     </div>
     <div class="grille-t">
       <div class="tm rev">
-        <div class="res">A lancé son activité</div>
+        <div class="tm-head">
+          <div class="tm-avatar">V</div>
+          <div class="res">A lancé son activité</div>
+        </div>
         <q>J'ai beaucoup de travail à faire sur moi, que j'ai commencé depuis quelque temps déjà,
           mais c'est tellement enkysté. Merci d'être là pour moi. Tu as bien choisi ta voie.</q>
         <cite>Vincent</cite>
       </div>
       <div class="tm rev">
-        <div class="res">A débloqué sa procrastination</div>
+        <div class="tm-head">
+          <div class="tm-avatar">S</div>
+          <div class="res">A débloqué sa procrastination</div>
+        </div>
         <q>Merci pour ton accompagnement. Je ne sais pas où j'en serais sans toi.</q>
-        <cite>Thérapeute · prénom modifié</cite>
+        <cite>Sandra</cite>
       </div>
       <div class="tm rev" style="grid-column:1/-1">
-        <div class="res">A identifié ce qui bloquait depuis des années</div>
+        <div class="tm-head">
+          <div class="tm-avatar">D</div>
+          <div class="res">A identifié ce qui bloquait depuis des années</div>
+        </div>
         <q>Après 2h de discussion, j'ai eu tellement d'éclaircissement dans les limitations que
           je m'imposais. Toutes les choses qui ne marchaient pas n'étaient que le fruit de mes
           croyances mal placées. Merci de m'avoir aidé à mettre un doigt sur ça.</q>
         <cite>Damien</cite>
+      </div>
+      <div class="tm rev" style="grid-column:1/-1">
+        <div class="tm-head">
+          <div class="tm-avatar">M</div>
+          <div class="res">A retrouvé de la clarté sur son projet</div>
+        </div>
+        <q>J'ai fait appel à Franck à un moment où je me sentais un peu perdue dans mon projet
+          professionnel et bloquée par certaines croyances. Grâce à son écoute, à ses questions
+          très justes, mais aussi aux outils et aux pistes concrètes qu'il m'a proposés, j'ai pu
+          prendre du recul et retrouver de la clarté. Il ne donne pas de réponses toutes faites :
+          il nous aide à trouver celles que nous avons déjà en nous et à avancer avec plus de
+          confiance. Un accompagnement profondément humain et bienveillant que je recommande
+          sincèrement.</q>
+        <cite>Mathilde</cite>
+        <!-- Audio à intégrer : remplacer le bloc ci-dessous par
+             <audio controls src="temoignage-mathilde.mp3"></audio>
+             une fois le fichier reçu et déposé dans le repo. -->
+        <div class="tm-audio">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 10v4M8 6v12M12 3v18M16 6v12M20 10v4" stroke-linecap="round"/>
+          </svg>
+          Témoignage audio à venir
+        </div>
       </div>
     </div>
     <p class="note rev"><b>Ce que ces témoignages ne disent pas encore.</b> Les parcours 60 jours
