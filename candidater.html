@@ -20,7 +20,6 @@ body{font-family:var(--sans);color:var(--creme);font-size:17px;line-height:1.6;
   background:radial-gradient(130% 90% at 50% 0%,var(--bleu-vif) 0%,var(--bleu) 32%,var(--bleu-nuit) 100%);
   min-height:100svh;-webkit-font-smoothing:antialiased}
 
-/* barre de progression */
 .barre{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(245,240,232,.12);z-index:50}
 .barre i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--or),var(--or-clair));
   transition:width .45s cubic-bezier(.2,.8,.3,1)}
@@ -42,7 +41,6 @@ body{font-family:var(--sans);color:var(--creme);font-size:17px;line-height:1.6;
 .q{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.16;margin-bottom:12px}
 .aide{font-size:16px;font-weight:300;color:rgba(245,240,232,.62);margin-bottom:30px;max-width:46ch}
 
-/* choix cliquables */
 .choix{display:grid;gap:12px}
 .opt{position:relative;text-align:left;width:100%;cursor:pointer;
   background:rgba(245,240,232,.05);border:1.5px solid rgba(245,240,232,.14);border-radius:7px;
@@ -55,7 +53,6 @@ body{font-family:var(--sans);color:var(--creme);font-size:17px;line-height:1.6;
 .opt.sel::after{border-color:var(--or);background:var(--or);
   box-shadow:inset 0 0 0 4px var(--bleu-nuit)}
 
-/* champs libres */
 textarea,input{width:100%;font-family:var(--sans);font-size:17px;color:var(--creme);
   background:rgba(245,240,232,.055);border:1.5px solid rgba(245,240,232,.14);border-radius:7px;
   padding:17px 19px;outline:none;transition:border-color .2s ease,background .2s ease}
@@ -81,7 +78,6 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
 .retour:hover{color:var(--or)}
 .astuce{font-size:13.5px;color:rgba(245,240,232,.38);margin-top:18px}
 
-/* confirmation */
 #fin{display:none;text-align:center}
 #fin.on{display:block;animation:entre .5s cubic-bezier(.2,.8,.3,1)}
 .coche{width:66px;height:66px;border-radius:50%;border:2px solid var(--or);margin:0 auto 28px;
@@ -103,7 +99,7 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
 <div class="barre"><i id="jauge"></i></div>
 <div class="haut">
   <span class="marque">Racine &amp; Impact</span>
-  <span class="compteur" id="compteur">01 / 10</span>
+  <span class="compteur" id="compteur">01 / 11</span>
 </div>
 
 <div class="scene">
@@ -119,9 +115,25 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
       <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button></div>
     </div>
 
-    <!-- 1 -->
-    <div class="etape" data-t="choix" data-c="duree">
+    <!-- 1 — NOUVELLE ÉTAPE : segmentation -->
+    <div class="etape" data-t="choix" data-c="type_situation">
       <div class="num">Question 01</div>
+      <h2 class="q">Qu'est-ce qui te correspond le mieux aujourd'hui&nbsp;?</h2>
+      <p class="aide">Ça m'aide à préparer notre échange autour de ta vraie situation.</p>
+      <div class="choix">
+        <button type="button" class="opt">Je veux lancer une activité</button>
+        <button type="button" class="opt">Je veux faire évoluer une activité déjà lancée</button>
+        <button type="button" class="opt">Je veux changer de métier ou me reconvertir</button>
+        <button type="button" class="opt">Un autre type de blocage dans ma vie</button>
+      </div>
+      <div class="erreur">Choisis une réponse pour continuer.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="etape" data-t="choix" data-c="duree">
+      <div class="num">Question 02</div>
       <h2 class="q">Depuis combien de temps tu portes ton projet&nbsp;?</h2>
       <p class="aide">Ce qui compte, ce n'est pas l'ancienneté. C'est que tu l'aies gardé vivant.</p>
       <div class="choix">
@@ -131,23 +143,24 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button type="button" class="opt">Plus de 3 ans</button>
       </div>
       <div class="erreur">Choisis une réponse pour continuer.</div>
-      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button></div>
-    </div>
-
-    <!-- 2 -->
-    <div class="etape" data-t="texte" data-c="projet">
-      <div class="num">Question 02</div>
-      <h2 class="q">C'est quoi, ton projet&nbsp;?</h2>
-      <p class="aide">Une phrase suffit. Dis-le comme tu le dirais à un ami, pas comme dans un dossier.</p>
-      <textarea placeholder="Par exemple : je veux lancer mon activité de…"></textarea>
-      <div class="erreur">Décris ton projet, même brièvement.</div>
       <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
     <!-- 3 -->
-    <div class="etape" data-t="texte" data-c="blocage">
+    <div class="etape" data-t="texte" data-c="projet">
       <div class="num">Question 03</div>
+      <h2 class="q">C'est quoi, ton projet&nbsp;?</h2>
+      <p class="aide">Une phrase suffit. Dis-le comme tu le dirais à un ami, pas comme dans un dossier.</p>
+      <textarea placeholder="Par exemple : je veux lancer mon activité de…, faire décoller mon activité actuelle, ou changer de métier vers…"></textarea>
+      <div class="erreur">Décris ton projet, même brièvement.</div>
+      <div class="pied"><button class="btn" data-suivant>Continuer <span>→</span></button>
+        <button class="retour" data-retour>← Retour</button></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="etape" data-t="texte" data-c="blocage">
+      <div class="num">Question 04</div>
       <h2 class="q">Qu'est-ce qui bloque, selon toi&nbsp;?</h2>
       <p class="aide">Ta réponse spontanée. Pas besoin qu'elle soit juste — c'est justement ce qu'on ira vérifier ensemble.</p>
       <textarea placeholder="Ce qui me bloque, c'est…"></textarea>
@@ -156,9 +169,9 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <!-- 4 -->
+    <!-- 5 -->
     <div class="etape" data-t="texte" data-c="essaye">
-      <div class="num">Question 04</div>
+      <div class="num">Question 05</div>
       <h2 class="q">Qu'est-ce que tu as déjà essayé&nbsp;?</h2>
       <p class="aide">Lectures, formations, applications, coachs, méthodes… et ce que ça a donné.</p>
       <textarea placeholder="J'ai essayé…"></textarea>
@@ -167,9 +180,9 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <!-- 5 -->
+    <!-- 6 -->
     <div class="etape" data-t="choix" data-c="situation">
-      <div class="num">Question 05</div>
+      <div class="num">Question 06</div>
       <h2 class="q">Ta situation professionnelle aujourd'hui</h2>
       <p class="aide">Ça change beaucoup de choses sur la manière dont on construira ton système.</p>
       <div class="choix">
@@ -184,9 +197,9 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <!-- 6 -->
+    <!-- 7 -->
     <div class="etape" data-t="choix" data-c="dispo">
-      <div class="num">Question 06</div>
+      <div class="num">Question 07</div>
       <h2 class="q">Combien de temps tu peux vraiment y consacrer par semaine&nbsp;?</h2>
       <p class="aide">Pas dans l'idéal. Cette semaine, avec ta vie telle qu'elle est aujourd'hui.</p>
       <div class="choix">
@@ -200,9 +213,9 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <!-- 7 -->
+    <!-- 8 -->
     <div class="etape" data-t="choix" data-c="engagement">
-      <div class="num">Question 07</div>
+      <div class="num">Question 08</div>
       <h2 class="q">Si on décide ensemble que c'est le bon moment, tu es prêt à t'engager sur 60 jours&nbsp;?</h2>
       <p class="aide">Réponds honnêtement. Aucune réponse ne te disqualifie — elle change juste ce dont on parlera.</p>
       <div class="choix">
@@ -215,9 +228,9 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <!-- 8 -->
+    <!-- 9 -->
     <div class="etape" data-t="tel-dispo">
-      <div class="num">Question 08</div>
+      <div class="num">Question 09</div>
       <h2 class="q">Ton numéro, et les moments où te joindre&nbsp;?</h2>
       <p class="aide">Choisis jusqu'à 3 moments où tu es le plus disponible pour un appel.</p>
       <span class="lbl">Ton numéro de téléphone</span>
@@ -234,7 +247,7 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
         <button class="retour" data-retour>← Retour</button></div>
     </div>
 
-    <!-- 9 -->
+    <!-- 10 -->
     <div class="etape" data-t="contact">
       <div class="num">Dernière étape</div>
       <h2 class="q">Où je te réponds&nbsp;?</h2>
@@ -269,8 +282,8 @@ textarea::placeholder,input::placeholder{color:rgba(245,240,232,.3)}
 
 <script>
 /* ─── EmailJS ───
-   ⚠ Crée un NOUVEAU template EmailJS pour ce formulaire et remplace TEMPLATE_CANDIDATURE.
-   Variables : {{prenom}} {{email}} {{telephone}} {{creneaux}} {{duree}} {{projet}}
+   ⚠ Le template EmailJS doit inclure la nouvelle variable {{type_situation}}
+   Variables : {{prenom}} {{email}} {{telephone}} {{creneaux}} {{type_situation}} {{duree}} {{projet}}
                {{blocage}} {{essaye}} {{situation}} {{dispo}} {{engagement}}
 */
 const EMAILJS_PUBLIC  = "3Dd1W0QbxF_U1_Gvd";
