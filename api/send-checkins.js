@@ -10,6 +10,11 @@
 // maison à passer en query param, pour empêcher que n'importe qui déclenche des envois
 // en appelant l'URL au hasard.
 //
+// NOUVEAU (24/08/2026) : le message envoyé dépend maintenant du Moteur (ANCRAGE ou
+// RUPTURE) de l'expérience active du client, lu via le lien "Expérience active" ->
+// table CSR_Expériences. Si aucune expérience n'est liée (client pas encore migré
+// vers le nouveau système), le message générique d'origine est utilisé.
+//
 // Variables d'environnement nécessaires (les mêmes que telegram-webhook.js, plus une) :
 //   AIRTABLE_TOKEN
 //   AIRTABLE_BASE_ID
@@ -24,6 +29,7 @@ const SEND_CHECKINS_SECRET = process.env.SEND_CHECKINS_SECRET;
 const CHECKIN_FORM_URL = process.env.CHECKIN_FORM_URL;
 
 const TABLE_ID = 'tblqs1g7AhGeShbSh'; // SuiviCSR_Clients
+const EXPERIENCES_TABLE_ID = 'tbl2PYkTaFNT05eDU'; // CSR_Expériences
 
 const FIELD_ACTIF = 'fldCwOOxw0pV2Nr8B';
 const FIELD_CHECKIN_PREVU = 'fld3OC7M7Heod64Mr';
@@ -32,6 +38,9 @@ const FIELD_HEURE = 'fldyx8iZ3crqS1Npv';
 const FIELD_CHAT_ID = 'fld4RMGq7j3yqy5Ej';
 const FIELD_DERNIER_ENVOI = 'fld5fPRWA4aPBvUnQ';
 const FIELD_PRENOM = 'fldOKuUJQGFYouAlg';
+const FIELD_EXPERIENCE_ACTIVE = 'fldJbkV01X1SfqUUa'; // NOUVEAU
+
+const FIELD_MOTEUR = 'fldLdS5On5GP2ob7c'; // NOUVEAU — sur CSR_Expériences
 
 // Renvoie l'heure actuelle à Paris, arrondie au quart d'heure précédent, format "HH:MM".
 function currentParisTimeWindow() {
@@ -80,8 +89,40 @@ async function fetchActiveClients() {
   return data.records || [];
 }
 
-async function sendTelegramMessage(chatId, prenom) {
-  const text = `Bonjour ${prenom || ''} 👋\n\nC'est l'heure de ton check-in du jour. Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+// NOUVEAU — récupère le Moteur (ANCRAGE / RUPTURE) d'une expérience donnée.
+// Retourne null si le lookup échoue ou si le champ est vide, pour rester
+// silencieux et retomber sur le message générique plutôt que de faire planter l'envoi.
+async function fetchMoteur(experienceRecordId) {
+  try {
+    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${EXPERIENCES_TABLE_ID}/${experienceRecordId}?returnFieldsByFieldId=true`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const moteurField = data.fields ? data.fields[FIELD_MOTEUR] : null;
+    // Les champs singleSelect renvoient soit une chaîne, soit un objet { name }.
+    if (!moteurField) return null;
+    return typeof moteurField === 'string' ? moteurField : moteurField.name || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// NOUVEAU — construit le texte du message selon le moteur.
+function buildMessageText(prenom, moteur) {
+  const nom = prenom || '';
+  if (moteur === 'ANCRAGE') {
+    return `Bonjour ${nom} 👋\n\nAs-tu fait ton action aujourd'hui ? Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+  }
+  if (moteur === 'RUPTURE') {
+    return `Bonjour ${nom} 👋\n\nAs-tu repéré le signal aujourd'hui, et as-tu réussi à intercepter ? Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+  }
+  // Message générique d'origine, pour les clients sans expérience liée pour l'instant.
+  return `Bonjour ${nom} 👋\n\nC'est l'heure de ton check-in du jour. Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+}
+
+async function sendTelegramMessage(chatId, text) {
   const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -124,6 +165,7 @@ export default async function handler(req, res) {
     const dernierEnvoi = f[FIELD_DERNIER_ENVOI];
     const prenom = f[FIELD_PRENOM];
     const checkinPrevu = f[FIELD_CHECKIN_PREVU];
+    const experienceLinks = f[FIELD_EXPERIENCE_ACTIVE]; // NOUVEAU
 
     if (checkinPrevu !== 1) {
       continue; // pas dans la fenêtre du programme aujourd'hui
@@ -138,7 +180,13 @@ export default async function handler(req, res) {
     }
 
     if (canal === 'Telegram' && chatId) {
-      const ok = await sendTelegramMessage(chatId, prenom);
+      // NOUVEAU — lookup du moteur si une expérience active est liée.
+      let moteur = null;
+      if (Array.isArray(experienceLinks) && experienceLinks.length > 0) {
+        moteur = await fetchMoteur(experienceLinks[0]);
+      }
+      const text = buildMessageText(prenom, moteur);
+      const ok = await sendTelegramMessage(chatId, text);
       if (ok) {
         await markSent(record.id);
         sent.push(prenom || record.id);
