@@ -20,13 +20,15 @@
 //   AIRTABLE_BASE_ID
 //   TELEGRAM_BOT_TOKEN
 //   SEND_CHECKINS_SECRET   -> une chaîne longue et aléatoire que tu choisis toi-même
-//   CHECKIN_FORM_URL       -> le lien public du formulaire Airtable de check-in
+//   CHECKIN_FORM_URL       -> N'EST PLUS UTILISÉ depuis le 27/08/2026 (le message
+//                             pointe désormais directement vers l'app SuiviCSR,
+//                             pas vers un formulaire Airtable séparé)
 
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const SEND_CHECKINS_SECRET = process.env.SEND_CHECKINS_SECRET;
-const CHECKIN_FORM_URL = process.env.CHECKIN_FORM_URL;
+// Note : CHECKIN_FORM_URL n'est plus lu — remplacé par APP_URL, fixe, ci-dessous.
 
 const TABLE_ID = 'tblqs1g7AhGeShbSh'; // SuiviCSR_Clients
 const EXPERIENCES_TABLE_ID = 'tbl2PYkTaFNT05eDU'; // CSR_Expériences
@@ -110,16 +112,18 @@ async function fetchMoteur(experienceRecordId) {
 }
 
 // NOUVEAU — construit le texte du message selon le moteur.
+const APP_URL = 'https://suivicsr.vercel.app/';
+
 function buildMessageText(prenom, moteur) {
   const nom = prenom || '';
   if (moteur === 'ANCRAGE') {
-    return `Bonjour ${nom} 👋\n\nAs-tu fait ton action aujourd'hui ? Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+    return `Bonjour ${nom} 👋\n\nAs-tu fait ton action aujourd'hui ? Retrouve ton point du jour ici, moins d'une minute :\n${APP_URL}`;
   }
   if (moteur === 'RUPTURE') {
-    return `Bonjour ${nom} 👋\n\nAs-tu repéré le signal aujourd'hui, et as-tu réussi à intercepter ? Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+    return `Bonjour ${nom} 👋\n\nAs-tu repéré le signal aujourd'hui, et as-tu réussi à ne pas le faire ? Retrouve ton point du jour ici, moins d'une minute :\n${APP_URL}`;
   }
   // Message générique d'origine, pour les clients sans expérience liée pour l'instant.
-  return `Bonjour ${nom} 👋\n\nC'est l'heure de ton check-in du jour. Deux questions, moins d'une minute :\n${CHECKIN_FORM_URL}`;
+  return `Bonjour ${nom} 👋\n\nC'est l'heure de ton point du jour. Retrouve-le ici, moins d'une minute :\n${APP_URL}`;
 }
 
 async function sendTelegramMessage(chatId, text) {
