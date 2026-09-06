@@ -1,50 +1,69 @@
 // api/send-checkins.js
 //
 // Route Vercel serverless — appelée toutes les 15 minutes par un scheduler externe
-// gratuit (ex. cron-job.org). Elle vérifie, pour chaque cliente active, si c'est
-// l'heure de lui envoyer son rappel de check-in aujourd'hui, et envoie le message
-// via Telegram si c'est le cas.
+// gratuit (ex. cron-job.org).
 //
-// SÉCURITÉ : cette route n'est pas protégée par le CRON_SECRET automatique de Vercel
-// (celui-ci n'existe que pour les cron jobs natifs Vercel). On utilise ici un secret
-// maison à passer en query param, pour empêcher que n'importe qui déclenche des envois
-// en appelant l'URL au hasard.
+// MIS À JOUR (Chantier C — Bot Telegram) — Passage à une logique en DEUX
+// messages par jour, plus un contexte réel (get-bot-context.js sur
+// suivi-csr) plutôt qu'un simple lookup du Moteur :
 //
-// NOUVEAU (24/08/2026) : le message envoyé dépend maintenant du Moteur (ANCRAGE ou
-// RUPTURE) de l'expérience active du client, lu via le lien "Expérience active" ->
-// table CSR_Expériences. Si aucune expérience n'est liée (client pas encore migré
-// vers le nouveau système), le message générique d'origine est utilisé.
+//   MESSAGE 1 (à "Heure préférée") — rappelle le petit pas actif, sans
+//   demander de validation. Ton adapté si plusieurs jours sans point du
+//   jour (CSR_Checkins), mais SANS JAMAIS affirmer une absence d'action —
+//   on ne connaît que l'absence de point du jour, pas ce qui s'est
+//   réellement passé.
 //
-// Variables d'environnement nécessaires (les mêmes que telegram-webhook.js, plus une) :
-//   AIRTABLE_TOKEN
-//   AIRTABLE_BASE_ID
-//   TELEGRAM_BOT_TOKEN
-//   SEND_CHECKINS_SECRET   -> une chaîne longue et aléatoire que tu choisis toi-même
-//   CHECKIN_FORM_URL       -> N'EST PLUS UTILISÉ depuis le 27/08/2026 (le message
-//                             pointe désormais directement vers l'app SuiviCSR,
-//                             pas vers un formulaire Airtable séparé)
+//   MESSAGE 2 (à "Heure préférée" + DECALAGE_HEURES_MESSAGE_2) — vérifie si
+//   le petit pas a été fait. Un point du jour déjà effectué dans la journée
+//   NE bloque PAS ce message (check-in quotidien ≠ validation du petit
+//   pas, ce sont deux événements distincts). En revanche, si le petit pas
+//   n'est plus Actif au moment de ce second passage (terminé entre-temps,
+//   ou expérience mise en pause), AUCUN message n'est envoyé — mais le
+//   créneau est quand même marqué comme traité pour ne pas le réévaluer
+//   inutilement plus tard dans la journée (bien que la fenêtre horaire
+//   elle-même ne se représente de toute façon qu'une fois par jour).
+//
+// Deux nouveaux champs sur SuiviCSR_Clients, à créer manuellement dans
+// Airtable avant déploiement :
+//   "Dernier envoi (message 1)"  — Date
+//   "Dernier envoi (message 2)"  — Date
+// L'ancien champ "Dernier envoi" n'est plus lu ni écrit par ce fichier —
+// laissé tel quel en base, pour ne rien casser côté historique.
+//
+// Variables d'environnement nécessaires :
+//   AIRTABLE_TOKEN, AIRTABLE_BASE_ID, TELEGRAM_BOT_TOKEN,
+//   SEND_CHECKINS_SECRET, BOT_CONTEXT_SECRET (nouveau — doit correspondre à
+//   la même valeur que sur le projet suivi-csr)
 
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const SEND_CHECKINS_SECRET = process.env.SEND_CHECKINS_SECRET;
-// Note : CHECKIN_FORM_URL n'est plus lu — remplacé par APP_URL, fixe, ci-dessous.
+const BOT_CONTEXT_SECRET = process.env.BOT_CONTEXT_SECRET;
 
 const TABLE_ID = 'tblqs1g7AhGeShbSh'; // SuiviCSR_Clients
-const EXPERIENCES_TABLE_ID = 'tbl2PYkTaFNT05eDU'; // CSR_Expériences
 
 const FIELD_ACTIF = 'fldCwOOxw0pV2Nr8B';
 const FIELD_CHECKIN_PREVU = 'fld3OC7M7Heod64Mr';
 const FIELD_CANAL = 'fldnXCCPoR58aJrOc';
 const FIELD_HEURE = 'fldyx8iZ3crqS1Npv';
 const FIELD_CHAT_ID = 'fld4RMGq7j3yqy5Ej';
-const FIELD_DERNIER_ENVOI = 'fld5fPRWA4aPBvUnQ';
 const FIELD_PRENOM = 'fldOKuUJQGFYouAlg';
-const FIELD_EXPERIENCE_ACTIVE = 'fldJbkV01X1SfqUUa'; // NOUVEAU
+const FIELD_CODE = 'fld7KsLwFMdsDBKYO';
 
-const FIELD_MOTEUR = 'fldLdS5On5GP2ob7c'; // NOUVEAU — sur CSR_Expériences
+// NOUVEAU — Champs texte, PAS des IDs techniques : à créer dans Airtable
+// avec exactement ces noms, puis à écrire/lire par leur NOM (pas leur ID),
+// pour rester simples à retrouver et modifier sans dépendre d'un ID interne.
+const FIELD_DERNIER_ENVOI_1 = 'Dernier envoi (message 1)';
+const FIELD_DERNIER_ENVOI_2 = 'Dernier envoi (message 2)';
 
-// Renvoie l'heure actuelle à Paris, arrondie au quart d'heure précédent, format "HH:MM".
+// NOUVEAU — constante clairement identifiable, comme demandé : le Message 2
+// part cette durée après l'Heure préférée du client. Modifiable ici
+// uniquement, sans toucher au reste de la logique.
+const DECALAGE_HEURES_MESSAGE_2 = 6;
+
+const APP_URL = 'https://suivicsr.vercel.app/';
+
 function currentParisTimeWindow() {
   const now = new Date();
   const parisString = now.toLocaleString('en-US', { timeZone: 'Europe/Paris' });
@@ -64,66 +83,85 @@ function todayParisDateString() {
   return `${y}-${mo}-${d}`;
 }
 
-function heureMatchesWindow(heurePref, windowHour, windowMinute) {
+// Compare l'heure courante (arrondie au quart d'heure) à une heure de
+// référence ("HH:MM"), à laquelle on ajoute éventuellement un décalage en
+// heures — utilisé tel quel pour le Message 1 (décalage 0) et le Message 2
+// (décalage = DECALAGE_HEURES_MESSAGE_2). Comme cette comparaison ne
+// correspond qu'à une seule fenêtre de 15 minutes par jour, le cron
+// (appelé toutes les 15 minutes) ne la fait matcher qu'une fois par jour
+// par construction — aucun champ supplémentaire n'est nécessaire pour
+// empêcher une réévaluation répétée du même créneau.
+function heureMatchesWindow(heurePref, windowHour, windowMinute, decalageHeures) {
   if (!heurePref) return false;
   const parts = heurePref.trim().split(':');
   if (parts.length !== 2) return false;
-  const h = parseInt(parts[0], 10);
+  let h = parseInt(parts[0], 10);
   const m = parseInt(parts[1], 10);
   if (Number.isNaN(h) || Number.isNaN(m)) return false;
+  h = (h + (decalageHeures || 0)) % 24;
   const prefWindowMinute = Math.floor(m / 15) * 15;
   return h === windowHour && prefWindowMinute === windowMinute;
 }
 
 async function fetchActiveClients() {
-  // Note : on ne filtre ici que sur {Actif}, un champ sans caractère spécial.
-  // Le filtre "Check-in prévu aujourd'hui" est volontairement appliqué plus bas,
-  // côté JS, sur le champ FIELD_CHECKIN_PREVU (identifié par son ID, pas son nom).
-  // Filtrer par nom de champ contenant une apostrophe dans une formule Airtable
-  // s'est révélé peu fiable (le filtre échouait silencieusement, sans erreur).
-  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_ID}?returnFieldsByFieldId=true&filterByFormula=${encodeURIComponent(
-    '{Actif}=1'
-  )}`;
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
-  });
+  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_ID}?returnFieldsByFieldId=true&filterByFormula=${encodeURIComponent('{Actif}=1')}`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
   const data = await res.json();
   return data.records || [];
 }
 
-// NOUVEAU — récupère le Moteur (ANCRAGE / RUPTURE) d'une expérience donnée.
-// Retourne null si le lookup échoue ou si le champ est vide, pour rester
-// silencieux et retomber sur le message générique plutôt que de faire planter l'envoi.
-async function fetchMoteur(experienceRecordId) {
+// NOUVEAU — remplace fetchMoteur() : interroge le contexte réel du bot côté
+// suivi-csr (Option C), une seule route dédiée plutôt qu'un lookup direct
+// du Moteur seul.
+async function fetchBotContext(clientCode) {
   try {
-    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${EXPERIENCES_TABLE_ID}/${experienceRecordId}?returnFieldsByFieldId=true`;
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
-    });
+    const url = `https://suivicsr.vercel.app/api/get-bot-context?code=${encodeURIComponent(clientCode)}&secret=${encodeURIComponent(BOT_CONTEXT_SECRET)}`;
+    const res = await fetch(url);
     if (!res.ok) return null;
-    const data = await res.json();
-    const moteurField = data.fields ? data.fields[FIELD_MOTEUR] : null;
-    // Les champs singleSelect renvoient soit une chaîne, soit un objet { name }.
-    if (!moteurField) return null;
-    return typeof moteurField === 'string' ? moteurField : moteurField.name || null;
+    return await res.json();
   } catch (err) {
     return null;
   }
 }
 
-// NOUVEAU — construit le texte du message selon le moteur.
-const APP_URL = 'https://suivicsr.vercel.app/';
-
-function buildMessageText(prenom, moteur) {
+function buildMessage1(prenom, context) {
   const nom = prenom || '';
-  if (moteur === 'ANCRAGE') {
-    return `Bonjour ${nom} 👋\n\nAs-tu fait ton action aujourd'hui ? Retrouve ton point du jour ici, moins d'une minute :\n${APP_URL}`;
+  if (!context || !context.hasExperience) {
+    return `Bonjour ${nom} 👋\n\nC'est l'heure de ton point du jour. Retrouve-le ici, moins d'une minute :\n${APP_URL}`;
   }
-  if (moteur === 'RUPTURE') {
-    return `Bonjour ${nom} 👋\n\nAs-tu repéré le signal aujourd'hui, et as-tu réussi à ne pas le faire ? Retrouve ton point du jour ici, moins d'une minute :\n${APP_URL}`;
+  if (context.statut === 'En pause') return null;
+
+  const petitPasTexte = context.petitPas && context.petitPas.reponse;
+
+  // Ton adapté si plusieurs jours sans point du jour — factuel uniquement,
+  // jamais une affirmation sur ce qui a été fait ou non.
+  let joursSansCheckin = null;
+  if (context.lastCheckinDate) {
+    const dernier = new Date(context.lastCheckinDate);
+    const aujourdHui = new Date(todayParisDateString());
+    joursSansCheckin = Math.round((aujourdHui - dernier) / 86400000);
   }
-  // Message générique d'origine, pour les clients sans expérience liée pour l'instant.
-  return `Bonjour ${nom} 👋\n\nC'est l'heure de ton point du jour. Retrouve-le ici, moins d'une minute :\n${APP_URL}`;
+  const plusieursJoursSansContact = joursSansCheckin === null || joursSansCheckin >= 3;
+
+  if (!petitPasTexte) {
+    return `Bonjour ${nom} 👋\n\n✓ Ton petit pas est terminé.\n\nLa suite t'attend sur SuiviCSR :\n${APP_URL}`;
+  }
+
+  if (plusieursJoursSansContact) {
+    return `Bonjour ${nom} 👋\n\nÇa fait quelques jours qu'on ne s'est pas retrouvé.\n\nSi tu veux reprendre, ton petit pas t'attend sur SuiviCSR :\n${APP_URL}`;
+  }
+
+  return `🌱 Bonjour ${nom}\n\nTa mission en cours :\n${petitPasTexte}\n\nGarde cette action en tête aujourd'hui.`;
+}
+
+function buildMessage2(prenom, context) {
+  if (!context || !context.hasExperience) return null;
+  if (context.statut === 'En pause') return null;
+  const petitPasTexte = context.petitPas && context.petitPas.reponse;
+  if (!petitPasTexte) return null; // petit pas terminé entre-temps : pas de relance sur du vide
+
+  const nom = prenom || '';
+  return `👀 Petit point, ${nom}\n\nEst-ce que tu as fait ton petit pas aujourd'hui ?\n${petitPasTexte}\n\nRéponds-toi sur SuiviCSR :\n${APP_URL}`;
 }
 
 async function sendTelegramMessage(chatId, text) {
@@ -135,17 +173,12 @@ async function sendTelegramMessage(chatId, text) {
   return res.ok;
 }
 
-async function markSent(recordId) {
+async function markSent(recordId, fieldName) {
   const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_ID}/${recordId}`;
   await fetch(url, {
     method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      fields: { [FIELD_DERNIER_ENVOI]: todayParisDateString() },
-    }),
+    headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: { [fieldName]: todayParisDateString() } }),
   });
 }
 
@@ -158,7 +191,8 @@ export default async function handler(req, res) {
   const today = todayParisDateString();
 
   const clients = await fetchActiveClients();
-  const sent = [];
+  const sent1 = [];
+  const sent2 = [];
   const skipped = [];
 
   for (const record of clients) {
@@ -166,40 +200,54 @@ export default async function handler(req, res) {
     const heurePref = f[FIELD_HEURE];
     const canal = f[FIELD_CANAL];
     const chatId = f[FIELD_CHAT_ID];
-    const dernierEnvoi = f[FIELD_DERNIER_ENVOI];
     const prenom = f[FIELD_PRENOM];
+    const clientCode = f[FIELD_CODE];
     const checkinPrevu = f[FIELD_CHECKIN_PREVU];
-    const experienceLinks = f[FIELD_EXPERIENCE_ACTIVE]; // NOUVEAU
+    const dernierEnvoi1 = f[FIELD_DERNIER_ENVOI_1];
+    const dernierEnvoi2 = f[FIELD_DERNIER_ENVOI_2];
 
-    if (checkinPrevu !== 1) {
-      continue; // pas dans la fenêtre du programme aujourd'hui
+    if (checkinPrevu !== 1) continue;
+    if (canal !== 'Telegram' || !chatId) {
+      skipped.push({ prenom, reason: 'canal non pris en charge' });
+      continue;
     }
 
-    if (dernierEnvoi === today) {
-      continue; // déjà envoyé aujourd'hui
-    }
-
-    if (!heureMatchesWindow(heurePref, hour, minute)) {
-      continue; // pas la bonne fenêtre horaire
-    }
-
-    if (canal === 'Telegram' && chatId) {
-      // NOUVEAU — lookup du moteur si une expérience active est liée.
-      let moteur = null;
-      if (Array.isArray(experienceLinks) && experienceLinks.length > 0) {
-        moteur = await fetchMoteur(experienceLinks[0]);
+    // Fenêtre Message 1.
+    if (dernierEnvoi1 !== today && heureMatchesWindow(heurePref, hour, minute, 0)) {
+      const context = await fetchBotContext(clientCode);
+      const text = buildMessage1(prenom, context);
+      if (text) {
+        const ok = await sendTelegramMessage(chatId, text);
+        if (ok) {
+          await markSent(record.id, FIELD_DERNIER_ENVOI_1);
+          sent1.push(prenom || record.id);
+        }
+      } else {
+        // Rien à envoyer (ex. expérience en pause) — on marque quand même
+        // le créneau comme traité pour rester cohérent avec Message 2.
+        await markSent(record.id, FIELD_DERNIER_ENVOI_1);
       }
-      const text = buildMessageText(prenom, moteur);
-      const ok = await sendTelegramMessage(chatId, text);
-      if (ok) {
-        await markSent(record.id);
-        sent.push(prenom || record.id);
+      continue; // un seul type d'envoi par passage de cron pour ce client
+    }
+
+    // Fenêtre Message 2 — seulement si le Message 1 a bien eu lieu aujourd'hui.
+    if (dernierEnvoi1 === today && dernierEnvoi2 !== today && heureMatchesWindow(heurePref, hour, minute, DECALAGE_HEURES_MESSAGE_2)) {
+      const context = await fetchBotContext(clientCode);
+      const text = buildMessage2(prenom, context);
+      if (text) {
+        const ok = await sendTelegramMessage(chatId, text);
+        if (ok) {
+          await markSent(record.id, FIELD_DERNIER_ENVOI_2);
+          sent2.push(prenom || record.id);
+        }
+      } else {
+        // Petit pas terminé entre-temps, ou en pause : pas de message, mais
+        // le créneau est marqué traité pour ne pas le réévaluer plus tard
+        // dans la journée (cf. commentaire de heureMatchesWindow).
+        await markSent(record.id, FIELD_DERNIER_ENVOI_2);
       }
-    } else {
-      // Canal Email pas encore implémenté dans cette version.
-      skipped.push({ prenom, reason: 'canal email non implémenté' });
     }
   }
 
-  return res.status(200).json({ ok: true, fenetre: `${hour}:${minute}`, envoyes: sent, ignores: skipped });
+  return res.status(200).json({ ok: true, fenetre: `${hour}:${minute}`, message1: sent1, message2: sent2, ignores: skipped });
 }
