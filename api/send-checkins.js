@@ -83,6 +83,25 @@ function todayParisDateString() {
   return `${y}-${mo}-${d}`;
 }
 
+// NOUVEAU (correctif) — les deux champs "Dernier envoi" sont des dateTime
+// Airtable, renvoyés par l'API en UTC (suffixe Z). Autour de minuit à
+// Paris, l'heure UTC est encore la veille : une simple troncature des 10
+// premiers caractères comparait alors une date UTC à une date Paris,
+// désynchronisées de plusieurs heures. Cette fonction convertit d'abord la
+// date lue vers le fuseau Paris, exactement comme todayParisDateString(),
+// avant toute comparaison.
+function toParisDateString(isoString) {
+  if (!isoString) return '';
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return '';
+  const parisString = d.toLocaleString('en-US', { timeZone: 'Europe/Paris' });
+  const parisDate = new Date(parisString);
+  const y = parisDate.getFullYear();
+  const mo = String(parisDate.getMonth() + 1).padStart(2, '0');
+  const day = String(parisDate.getDate()).padStart(2, '0');
+  return `${y}-${mo}-${day}`;
+}
+
 // Compare l'heure courante (arrondie au quart d'heure) à une heure de
 // référence ("HH:MM"), à laquelle on ajoute éventuellement un décalage en
 // heures — utilisé tel quel pour le Message 1 (décalage 0) et le Message 2
@@ -220,8 +239,8 @@ export default async function handler(req, res) {
     // Les deux champs "Dernier envoi" sont en type Date+Heure dans Airtable
     // — on ne compare que la partie date (10 premiers caractères ISO),
     // jamais la chaîne complète, sinon la comparaison ne correspond jamais.
-    const dernierEnvoi1Date = (dernierEnvoi1 || '').slice(0, 10);
-    const dernierEnvoi2Date = (dernierEnvoi2 || '').slice(0, 10);
+    const dernierEnvoi1Date = toParisDateString(dernierEnvoi1);
+    const dernierEnvoi2Date = toParisDateString(dernierEnvoi2);
 
     // Fenêtre Message 1.
     if (dernierEnvoi1Date !== today && heureMatchesWindow(heurePref, hour, minute, 0)) {
