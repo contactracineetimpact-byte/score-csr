@@ -212,8 +212,14 @@ export default async function handler(req, res) {
       continue;
     }
 
+    // Les deux champs "Dernier envoi" sont en type Date+Heure dans Airtable
+    // — on ne compare que la partie date (10 premiers caractères ISO),
+    // jamais la chaîne complète, sinon la comparaison ne correspond jamais.
+    const dernierEnvoi1Date = (dernierEnvoi1 || '').slice(0, 10);
+    const dernierEnvoi2Date = (dernierEnvoi2 || '').slice(0, 10);
+
     // Fenêtre Message 1.
-    if (dernierEnvoi1 !== today && heureMatchesWindow(heurePref, hour, minute, 0)) {
+    if (dernierEnvoi1Date !== today && heureMatchesWindow(heurePref, hour, minute, 0)) {
       const context = await fetchBotContext(clientCode);
       const text = buildMessage1(prenom, context);
       if (text) {
@@ -231,7 +237,7 @@ export default async function handler(req, res) {
     }
 
     // Fenêtre Message 2 — seulement si le Message 1 a bien eu lieu aujourd'hui.
-    if (dernierEnvoi1 === today && dernierEnvoi2 !== today && heureMatchesWindow(heurePref, hour, minute, DECALAGE_HEURES_MESSAGE_2)) {
+    if (dernierEnvoi1Date === today && dernierEnvoi2Date !== today && heureMatchesWindow(heurePref, hour, minute, DECALAGE_HEURES_MESSAGE_2)) {
       const context = await fetchBotContext(clientCode);
       const text = buildMessage2(prenom, context);
       if (text) {
