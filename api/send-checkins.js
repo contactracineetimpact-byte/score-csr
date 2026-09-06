@@ -141,7 +141,12 @@ function buildMessage1(prenom, context) {
     const aujourdHui = new Date(todayParisDateString());
     joursSansCheckin = Math.round((aujourdHui - dernier) / 86400000);
   }
-  const plusieursJoursSansContact = joursSansCheckin === null || joursSansCheckin >= 3;
+  // NOUVEAU (correction) — "aucun point du jour n'existe encore" (cycle
+  // tout juste démarré) n'est PAS la même chose que "plusieurs jours de
+  // silence" : seul un vrai écart mesuré (au moins un point du jour déjà
+  // existant, mais ancien) déclenche le ton neutre. L'absence totale de
+  // donnée retombe sur le rappel de mission classique.
+  const plusieursJoursSansContact = joursSansCheckin !== null && joursSansCheckin >= 3;
 
   if (!petitPasTexte) {
     return `Bonjour ${nom} 👋\n\n✓ Ton petit pas est terminé.\n\nLa suite t'attend sur SuiviCSR :\n${APP_URL}`;
