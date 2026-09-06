@@ -54,8 +54,16 @@ const FIELD_CODE = 'fld7KsLwFMdsDBKYO';
 // NOUVEAU — Champs texte, PAS des IDs techniques : à créer dans Airtable
 // avec exactement ces noms, puis à écrire/lire par leur NOM (pas leur ID),
 // pour rester simples à retrouver et modifier sans dépendre d'un ID interne.
-const FIELD_DERNIER_ENVOI_1 = 'Dernier envoi (message 1)';
-const FIELD_DERNIER_ENVOI_2 = 'Dernier envoi (message 2)';
+// Deux constantes chacun : le NOM (utilisé pour écrire, car markSent() fait
+// un PATCH sans returnFieldsByFieldId, donc Airtable y attend des noms) et
+// l'IDENTIFIANT technique (utilisé pour lire, car fetchActiveClients() lit
+// avec returnFieldsByFieldId=true, donc les champs y sont indexés par ID,
+// pas par nom — confondre les deux a été la cause exacte du bug qui
+// empêchait le Message 2 de jamais se déclencher).
+const FIELD_DERNIER_ENVOI_1_NOM = 'Dernier envoi (message 1)';
+const FIELD_DERNIER_ENVOI_2_NOM = 'Dernier envoi (message 2)';
+const FIELD_DERNIER_ENVOI_1_ID = 'fldrt24R99v8ZdTMf';
+const FIELD_DERNIER_ENVOI_2_ID = 'fldMeCQoH9xwQqWik';
 
 // NOUVEAU — constante clairement identifiable, comme demandé : le Message 2
 // part cette durée après l'Heure préférée du client. Modifiable ici
@@ -227,8 +235,8 @@ export default async function handler(req, res) {
     const prenom = f[FIELD_PRENOM];
     const clientCode = f[FIELD_CODE];
     const checkinPrevu = f[FIELD_CHECKIN_PREVU];
-    const dernierEnvoi1 = f[FIELD_DERNIER_ENVOI_1];
-    const dernierEnvoi2 = f[FIELD_DERNIER_ENVOI_2];
+    const dernierEnvoi1 = f[FIELD_DERNIER_ENVOI_1_ID];
+    const dernierEnvoi2 = f[FIELD_DERNIER_ENVOI_2_ID];
 
     if (checkinPrevu !== 1) continue;
     if (canal !== 'Telegram' || !chatId) {
@@ -249,13 +257,13 @@ export default async function handler(req, res) {
       if (text) {
         const ok = await sendTelegramMessage(chatId, text);
         if (ok) {
-          await markSent(record.id, FIELD_DERNIER_ENVOI_1);
+          await markSent(record.id, FIELD_DERNIER_ENVOI_1_NOM);
           sent1.push(prenom || record.id);
         }
       } else {
         // Rien à envoyer (ex. expérience en pause) — on marque quand même
         // le créneau comme traité pour rester cohérent avec Message 2.
-        await markSent(record.id, FIELD_DERNIER_ENVOI_1);
+        await markSent(record.id, FIELD_DERNIER_ENVOI_1_NOM);
       }
       continue; // un seul type d'envoi par passage de cron pour ce client
     }
@@ -267,14 +275,14 @@ export default async function handler(req, res) {
       if (text) {
         const ok = await sendTelegramMessage(chatId, text);
         if (ok) {
-          await markSent(record.id, FIELD_DERNIER_ENVOI_2);
+          await markSent(record.id, FIELD_DERNIER_ENVOI_2_NOM);
           sent2.push(prenom || record.id);
         }
       } else {
         // Petit pas terminé entre-temps, ou en pause : pas de message, mais
         // le créneau est marqué traité pour ne pas le réévaluer plus tard
         // dans la journée (cf. commentaire de heureMatchesWindow).
-        await markSent(record.id, FIELD_DERNIER_ENVOI_2);
+        await markSent(record.id, FIELD_DERNIER_ENVOI_2_NOM);
       }
     }
   }
